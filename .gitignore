@@ -46,3 +46,7 @@ test-output
 
 # Local files
 *.local
+
+# Environment files
+.env
+*/**/.env
