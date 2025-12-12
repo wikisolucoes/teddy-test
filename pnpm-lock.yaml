@@ -238,6 +238,8 @@ importers:
 
   libs/api/feature-auth: {}
 
+  libs/api/feature-clients: {}
+
 packages:
 
   '@angular-devkit/core@19.2.17':

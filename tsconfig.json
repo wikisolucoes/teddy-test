@@ -20,6 +20,9 @@
     },
     {
       "path": "./libs/api/feature-auth"
+    },
+    {
+      "path": "./libs/api/feature-clients"
     }
   ]
 }
