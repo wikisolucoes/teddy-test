@@ -1,4 +1,4 @@
-/* eslint-disable */
+ 
 const { readFileSync } = require('fs');
 
 // Reading the SWC compilation config for the spec files
@@ -13,6 +13,7 @@ module.exports = {
   displayName: 'feature-health',
   preset: '../../../jest.preset.js',
   testEnvironment: 'node',
+  passWithNoTests: true,
   transform: {
     '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig],
   },
