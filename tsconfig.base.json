@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
@@ -16,6 +19,13 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",
-    "customConditions": ["@teddy-monorepo/source"]
+    "customConditions": ["@teddy-monorepo/source"],
+    "paths": {
+      "@teddy-monorepo/api/core": ["libs/api/core/src/index.ts"],
+      "@teddy-monorepo/api/feature-auth": ["libs/api/feature-auth/src/index.ts"],
+      "@teddy-monorepo/api/feature-clients": ["libs/api/feature-clients/src/index.ts"],
+      "@teddy-monorepo/api/feature-dashboard": ["libs/api/feature-dashboard/src/index.ts"],
+      "@teddy-monorepo/api/feature-health": ["libs/api/feature-health/src/index.ts"]
+    }
   }
 }
