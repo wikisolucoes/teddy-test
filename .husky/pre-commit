@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks on affected projects..."
+echo ""
+
+# Run lint and test only on affected projects (faster)
+pnpm exec nx affected -t lint test || {
+  echo ""
+  echo "❌ Pre-commit checks failed! Fix the issues above before committing."
+  echo ""
+  exit 1
+}
+
+echo ""
+echo "✅ Pre-commit checks passed!"
+echo ""
+

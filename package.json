@@ -8,7 +8,11 @@
     "migration:create": "pnpm typeorm migration:create",
     "migration:run": "pnpm typeorm migration:run",
     "migration:revert": "pnpm typeorm migration:revert",
-    "seed:run": "pnpm typeorm migration:run"
+    "seed:run": "pnpm typeorm migration:run",
+    "test": "nx affected -t test",
+    "lint": "nx affected -t lint",
+    "ci:check": "nx run-many -t lint test build typecheck",
+    "prepare": "husky"
   },
   "private": true,
   "devDependencies": {
@@ -52,6 +56,7 @@
     "eslint-plugin-playwright": "^1.6.2",
     "eslint-plugin-react": "7.35.0",
     "eslint-plugin-react-hooks": "5.0.0",
+    "husky": "^9.1.7",
     "jest": "^30.0.2",
     "jest-environment-jsdom": "^30.0.2",
     "jest-environment-node": "^30.0.2",
