@@ -2,7 +2,14 @@
   "name": "@teddy-monorepo/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "typeorm": "typeorm-ts-node-commonjs -d libs/api/core/src/lib/infrastructure/database/typeorm.config.ts",
+    "migration:generate": "pnpm typeorm migration:generate",
+    "migration:create": "pnpm typeorm migration:create",
+    "migration:run": "pnpm typeorm migration:run",
+    "migration:revert": "pnpm typeorm migration:revert",
+    "seed:run": "pnpm typeorm migration:run"
+  },
   "private": true,
   "devDependencies": {
     "@eslint/js": "^9.8.0",
