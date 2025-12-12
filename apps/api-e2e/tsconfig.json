@@ -3,6 +3,7 @@
   "compilerOptions": {
     "outDir": "out-tsc/@teddy-monorepo/api-e2e",
     "esModuleInterop": true,
+    "verbatimModuleSyntax": false,
     "noUnusedLocals": false,
     "noImplicitAny": false
   },

@@ -1,1 +1,1 @@
-export * from './lib/feature-clients.module';
+export * from './lib/feature-clients.module.js';

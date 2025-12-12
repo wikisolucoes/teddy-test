@@ -1,1 +1,1 @@
-export * from './lib/feature-health.module';
+export * from './lib/feature-health.module.js';
