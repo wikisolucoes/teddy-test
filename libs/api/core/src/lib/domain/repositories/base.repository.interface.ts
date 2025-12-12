@@ -1,4 +1,4 @@
-import { FindOptionsWhere, FindManyOptions } from 'typeorm';
+import type { FindOptionsWhere, FindManyOptions } from 'typeorm';
 
 export interface IBaseRepository<T> {
   findOne(where: FindOptionsWhere<T>): Promise<T | null>;

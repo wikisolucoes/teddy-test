@@ -2,7 +2,7 @@
   "compilerOptions": {
     "rootDir": ".",
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
+    "verbatimModuleSyntax": true,
     "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
