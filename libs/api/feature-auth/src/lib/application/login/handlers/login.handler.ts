@@ -1,11 +1,11 @@
-import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
+import { CommandHandler, type ICommandHandler } from '@nestjs/cqrs';
 import { UnauthorizedException, Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import type { Logger } from 'winston';
 import { LoginCommand } from '../commands/login.command.js';
-import { AuthResponseDto } from '../../shared/dtos/auth-response.dto.js';
+import type { AuthResponseDto } from '../../shared/dtos/auth-response.dto.js';
 import type { IUserRepository } from '../../../domain/repositories/user.repository.interface.js';
 import { Email } from '../../../domain/value-objects/email.vo.js';
 

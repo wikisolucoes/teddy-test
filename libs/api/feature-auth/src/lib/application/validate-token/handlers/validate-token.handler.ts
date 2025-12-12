@@ -1,4 +1,4 @@
-import { QueryHandler, IQueryHandler } from '@nestjs/cqrs';
+import { QueryHandler, type IQueryHandler } from '@nestjs/cqrs';
 import { NotFoundException, Inject } from '@nestjs/common';
 import { ValidateTokenQuery } from '../queries/validate-token.query.js';
 import type { IUserRepository } from '../../../domain/repositories/user.repository.interface.js';
