@@ -26,6 +26,9 @@
     },
     {
       "path": "./libs/api/feature-dashboard"
+    },
+    {
+      "path": "./libs/api/feature-health"
     }
   ]
 }

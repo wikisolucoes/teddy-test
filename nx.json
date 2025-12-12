@@ -32,7 +32,8 @@
       "exclude": [
         "libs/api/feature-auth/*",
         "libs/api/feature-clients/*",
-        "libs/api/feature-dashboard/*"
+        "libs/api/feature-dashboard/*",
+        "libs/api/feature-health/*"
       ]
     },
     {
@@ -84,7 +85,8 @@
       "include": [
         "libs/api/feature-auth/*",
         "libs/api/feature-clients/*",
-        "libs/api/feature-dashboard/*"
+        "libs/api/feature-dashboard/*",
+        "libs/api/feature-health/*"
       ],
       "options": {
         "typecheck": {

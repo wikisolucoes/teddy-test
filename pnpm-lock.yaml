@@ -242,6 +242,8 @@ importers:
 
   libs/api/feature-dashboard: {}
 
+  libs/api/feature-health: {}
+
 packages:
 
   '@angular-devkit/core@19.2.17':
