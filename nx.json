@@ -29,7 +29,11 @@
           "watchDepsName": "watch-deps"
         }
       },
-      "exclude": ["libs/api/feature-auth/*", "libs/api/feature-clients/*"]
+      "exclude": [
+        "libs/api/feature-auth/*",
+        "libs/api/feature-clients/*",
+        "libs/api/feature-dashboard/*"
+      ]
     },
     {
       "plugin": "@nx/eslint/plugin",
@@ -77,7 +81,11 @@
     },
     {
       "plugin": "@nx/js/typescript",
-      "include": ["libs/api/feature-auth/*", "libs/api/feature-clients/*"],
+      "include": [
+        "libs/api/feature-auth/*",
+        "libs/api/feature-clients/*",
+        "libs/api/feature-dashboard/*"
+      ],
       "options": {
         "typecheck": {
           "targetName": "typecheck"

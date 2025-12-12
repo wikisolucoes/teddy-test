@@ -240,6 +240,8 @@ importers:
 
   libs/api/feature-clients: {}
 
+  libs/api/feature-dashboard: {}
+
 packages:
 
   '@angular-devkit/core@19.2.17':
