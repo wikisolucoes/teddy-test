@@ -1,0 +1,10 @@
+import { FindOptionsWhere, FindManyOptions } from 'typeorm';
+
+export interface IBaseRepository<T> {
+  findOne(where: FindOptionsWhere<T>): Promise<T | null>;
+  findMany(options?: FindManyOptions<T>): Promise<T[]>;
+  findById(id: string): Promise<T | null>;
+  save(entity: T): Promise<T>;
+  remove(entity: T): Promise<T>;
+  softDelete(id: string): Promise<void>;
+}
