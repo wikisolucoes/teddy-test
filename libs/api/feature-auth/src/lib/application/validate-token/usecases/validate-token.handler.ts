@@ -1,7 +1,7 @@
 import { QueryHandler, type IQueryHandler } from '@nestjs/cqrs';
 import { NotFoundException, Inject } from '@nestjs/common';
 import { ValidateTokenQuery } from '../queries/validate-token.query.js';
-import type { IUserRepository } from '../../../domain/repositories/user.repository.interface.js';
+import { UserRepository } from '../../ports/user.repository.js';
 
 interface ValidateTokenResult {
   id: string;
@@ -15,8 +15,8 @@ export class ValidateTokenHandler
   implements IQueryHandler<ValidateTokenQuery, ValidateTokenResult> {
   
   constructor(
-    @Inject('IUserRepository')
-    private readonly userRepository: IUserRepository
+    @Inject(UserRepository)
+    private readonly userRepository: UserRepository
   ) {}
 
   async execute(query: ValidateTokenQuery): Promise<ValidateTokenResult> {

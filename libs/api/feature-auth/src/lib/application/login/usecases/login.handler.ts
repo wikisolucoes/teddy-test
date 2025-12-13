@@ -6,14 +6,14 @@ import * as bcrypt from 'bcrypt';
 import type { Logger } from 'winston';
 import { LoginCommand } from '../commands/login.command.js';
 import type { AuthResponseDto } from '../../shared/dtos/auth-response.dto.js';
-import type { IUserRepository } from '../../../domain/repositories/user.repository.interface.js';
+import { UserRepository } from '../../ports/user.repository.js';
 import { Email } from '../../../domain/value-objects/email.vo.js';
 
 @CommandHandler(LoginCommand)
 export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseDto> {
   constructor(
-    @Inject('IUserRepository')
-    private readonly userRepository: IUserRepository,
+    @Inject(UserRepository)
+    private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     @Inject('LOGGER')
