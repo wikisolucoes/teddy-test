@@ -104,4 +104,62 @@ export class TypeOrmClientRepository extends ClientRepository {
       totalPages: Math.ceil(total / limit)
     };
   }
+
+  async countActive(): Promise<number> {
+    return this.readRepo.count({
+      where: { deletedAt: IsNull() }
+    });
+  }
+
+  async countDeleted(): Promise<number> {
+    return this.readRepo
+      .createQueryBuilder('client')
+      .withDeleted()
+      .where('client.deleted_at IS NOT NULL')
+      .getCount();
+  }
+
+  async countNewThisMonth(): Promise<number> {
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    return this.readRepo
+      .createQueryBuilder('client')
+      .where('client.deleted_at IS NULL')
+      .andWhere('client.created_at >= :firstDay', { firstDay: firstDayOfMonth })
+      .getCount();
+  }
+
+  async countClientsByMonth(months: number): Promise<Array<{ month: Date; count: number }>> {
+    const now = new Date();
+    const startDate = new Date(now.getFullYear(), now.getMonth() - (months - 1), 1);
+
+    const result = await this.readRepo
+      .createQueryBuilder('client')
+      .select("DATE_TRUNC('month', client.created_at)", 'month')
+      .addSelect('COUNT(*)', 'count')
+      .where('client.deleted_at IS NULL')
+      .andWhere('client.created_at >= :startDate', { startDate })
+      .groupBy("DATE_TRUNC('month', client.created_at)")
+      .orderBy('month', 'ASC')
+      .getRawMany();
+
+    const monthsMap = new Map<string, number>();
+    result.forEach((row) => {
+      const monthKey = new Date(row.month).toISOString();
+      monthsMap.set(monthKey, parseInt(row.count, 10));
+    });
+
+    const allMonths: Array<{ month: Date; count: number }> = [];
+    for (let i = months - 1; i >= 0; i--) {
+      const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      const monthKey = date.toISOString();
+      allMonths.push({
+        month: date,
+        count: monthsMap.get(monthKey) || 0,
+      });
+    }
+
+    return allMonths;
+  }
 }

@@ -7,4 +7,10 @@ export abstract class ClientRepository extends BaseRepository<Client> {
   abstract findByCpf(cpf: string): Promise<Client | null>;
   abstract findAll(options: FindAllOptions): Promise<PaginatedResult<Client>>;
   abstract incrementAccessCount(id: string): Promise<void>;
+  
+  // Dashboard statistics methods
+  abstract countActive(): Promise<number>;
+  abstract countDeleted(): Promise<number>;
+  abstract countNewThisMonth(): Promise<number>;
+  abstract countClientsByMonth(months: number): Promise<Array<{ month: Date; count: number }>>;
 }

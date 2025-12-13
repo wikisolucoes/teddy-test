@@ -11,6 +11,7 @@ import {
 
 import { FeatureAuthModule } from '@teddy-monorepo/api/feature-auth';
 import { FeatureClientsModule } from '@teddy-monorepo/api/feature-clients';
+import { FeatureDashboardModule } from '@teddy-monorepo/api/feature-dashboard';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { FeatureClientsModule } from '@teddy-monorepo/api/feature-clients';
     // Feature Modules
     FeatureAuthModule,
     FeatureClientsModule,
+    FeatureDashboardModule,
   ],
   controllers: [AppController],
   providers: [AppService],
