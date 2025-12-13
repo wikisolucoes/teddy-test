@@ -23,6 +23,9 @@
   ],
   "references": [
     {
+      "path": "../../libs/api/feature-health/tsconfig.lib.json"
+    },
+    {
       "path": "../../libs/api/feature-dashboard/tsconfig.lib.json"
     },
     {

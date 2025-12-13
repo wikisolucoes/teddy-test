@@ -14,6 +14,7 @@ export * from './lib/infrastructure/logger/logger.module.js';
 export * from './lib/infrastructure/logger/winston.config.js';
 export * from './lib/infrastructure/metrics/metrics.module.js';
 export * from './lib/infrastructure/metrics/prometheus.service.js';
+export * from './lib/infrastructure/metrics/metrics.interceptor.js';
 
 // Common
 export * from './lib/common/filters/all-exceptions.filter.js';

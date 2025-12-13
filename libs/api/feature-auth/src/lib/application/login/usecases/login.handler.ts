@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import type { Logger } from 'winston';
+import { PrometheusService } from '@teddy-monorepo/api/core';
 import { LoginCommand } from '../commands/login.command.js';
 import type { AuthResponseDto } from '../../shared/dtos/auth-response.dto.js';
 import { UserRepository } from '../../ports/user.repository.js';
@@ -16,6 +17,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly prometheusService: PrometheusService,
     @Inject('winston')
     private readonly logger: Logger
   ) {}
@@ -29,6 +31,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
 
     if (!user || !user.isActive) {
       this.logger.warn('Login attempt failed', { email: emailVO.getValue() });
+      this.prometheusService.incrementAuthAttempts('failed');
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -38,6 +41,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
       this.logger.warn('Login attempt failed - wrong password', { 
         email: emailVO.getValue() 
       });
+      this.prometheusService.incrementAuthAttempts('failed');
       throw new UnauthorizedException('Invalid credentials');
     }
 
@@ -45,6 +49,8 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
     const accessToken = this.jwtService.sign(payload);
     const expiresIn = this.configService.get<string>('JWT_EXPIRES_IN', '24h');
 
+    this.prometheusService.incrementAuthAttempts('success');
+    
     this.logger.info('User logged in successfully', {
       userId: user.id,
       email: user.email,

@@ -77,4 +77,26 @@ export class PrometheusService {
   async getMetrics(): Promise<string> {
     return this.registry.metrics();
   }
+
+  recordHttpRequest(method: string, route: string, statusCode: number, duration: number): void {
+    this.httpRequestsTotal.inc({ method, route, status_code: statusCode });
+    this.httpRequestDuration.observe({ method, route, status_code: statusCode }, duration);
+  }
+
+  recordDbQuery(operation: string, entity: string, duration: number): void {
+    this.dbQueriesTotal.inc({ operation, entity });
+    this.dbQueryDuration.observe({ operation, entity }, duration);
+  }
+
+  setDbConnections(connection: string, count: number): void {
+    this.dbConnectionsActive.set({ connection }, count);
+  }
+
+  setClientsTotal(count: number): void {
+    this.clientsTotal.set(count);
+  }
+
+  incrementAuthAttempts(status: 'success' | 'failed'): void {
+    this.authAttemptsTotal.inc({ status });
+  }
 }
