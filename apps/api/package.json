@@ -1,7 +1,6 @@
 {
   "name": "@teddy-monorepo/api",
   "version": "0.0.1",
-  "type": "module",
   "private": true,
   "nx": {
     "targets": {
@@ -57,22 +56,23 @@
         "executor": "nx:noop"
       },
       "serve": {
-        "continuous": true,
-        "executor": "@nx/js:node",
+        "executor": "nx:run-commands",
         "defaultConfiguration": "development",
         "dependsOn": [
           "build"
         ],
         "options": {
-          "buildTarget": "@teddy-monorepo/api:build",
-          "runBuildTargetDependencies": false
+          "command": "node dist/main.js",
+          "cwd": "apps/api"
         },
         "configurations": {
           "development": {
-            "buildTarget": "@teddy-monorepo/api:build:development"
+            "command": "node dist/main.js",
+            "cwd": "apps/api"
           },
           "production": {
-            "buildTarget": "@teddy-monorepo/api:build:production"
+            "command": "node dist/main.js",
+            "cwd": "apps/api"
           }
         }
       },
