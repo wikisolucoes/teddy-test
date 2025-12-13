@@ -9,12 +9,14 @@ import { writeDataSourceOptions, readDataSourceOptions } from './typeorm.config.
     TypeOrmModule.forRoot({
       ...writeDataSourceOptions,
       name: 'write',
+      autoLoadEntities: true,
     }),
     
     // Conexão READ - usada por Queries
     TypeOrmModule.forRoot({
       ...readDataSourceOptions,
       name: 'read',
+      autoLoadEntities: true,
     }),
   ],
   exports: [TypeOrmModule],
