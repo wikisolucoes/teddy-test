@@ -3,7 +3,9 @@ export * from './lib/core.module.js';
 
 // Domain
 export * from './lib/domain/entities/base.entity.js';
-export * from './lib/domain/repositories/base.repository.interface.js';
+
+// Application Ports
+export * from './lib/application/ports/base.repository.js';
 
 // Infrastructure
 export * from './lib/infrastructure/database/database.module.js';
