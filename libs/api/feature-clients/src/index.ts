@@ -9,6 +9,9 @@ export { Phone } from './lib/domain/value-objects/phone.vo.js';
 // Application - Ports
 export { ClientRepository } from './lib/application/ports/client.repository.js';
 
+// Infrastructure - Schemas
+export { ClientSchema } from './lib/infrastructure/persistence/typeorm/schemas/client.schema.js';
+
 // Application - DTOs
 export {
   type ClientDto,
