@@ -18,3 +18,4 @@ export * from './lib/common/filters/all-exceptions.filter.js';
 export * from './lib/common/interceptors/logging.interceptor.js';
 export * from './lib/common/pipes/zod-validation.pipe.js';
 export * from './lib/common/decorators/auth.decorators.js';
+export * from './lib/common/dtos/pagination.dto.js';
