@@ -5,6 +5,6 @@ export interface IBaseRepository<T> {
   findMany(options?: FindManyOptions<T>): Promise<T[]>;
   findById(id: string): Promise<T | null>;
   save(entity: T): Promise<T>;
-  remove(entity: T): Promise<T>;
+  delete(id: string): Promise<void>;
   softDelete(id: string): Promise<void>;
 }
