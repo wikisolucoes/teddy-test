@@ -77,7 +77,6 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@asteasolutions/zod-to-openapi": "^8.2.0",
     "@nestjs/common": "^11.0.0",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
