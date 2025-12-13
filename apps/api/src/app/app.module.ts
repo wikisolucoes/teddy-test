@@ -1,9 +1,33 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 
+import {
+  DatabaseModule,
+  LoggerModule,
+  MetricsModule,
+} from '@teddy-monorepo/api/core';
+
+import { FeatureAuthModule } from '@teddy-monorepo/api/feature-auth';
+import { FeatureClientsModule } from '@teddy-monorepo/api/feature-clients';
+
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+
+    // Core Infrastructure
+    DatabaseModule,
+    LoggerModule,
+    MetricsModule,
+
+    // Feature Modules
+    FeatureAuthModule,
+    FeatureClientsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

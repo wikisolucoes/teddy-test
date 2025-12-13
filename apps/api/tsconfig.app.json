@@ -20,5 +20,16 @@
     "eslint.config.js",
     "eslint.config.cjs",
     "eslint.config.mjs"
+  ],
+  "references": [
+    {
+      "path": "../../libs/api/feature-clients/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/api/feature-auth/tsconfig.lib.json"
+    },
+    {
+      "path": "../../libs/api/core/tsconfig.lib.json"
+    }
   ]
 }
