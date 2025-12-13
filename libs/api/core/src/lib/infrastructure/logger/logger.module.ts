@@ -5,10 +5,10 @@ import { logger } from './winston.config.js';
 @Module({
   providers: [
     {
-      provide: 'LOGGER',
+      provide: 'winston',
       useValue: logger,
     },
   ],
-  exports: ['LOGGER'],
+  exports: ['winston'],
 })
 export class LoggerModule {}

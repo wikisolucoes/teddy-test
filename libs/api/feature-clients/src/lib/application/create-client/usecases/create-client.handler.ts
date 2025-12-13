@@ -13,7 +13,7 @@ export class CreateClientHandler implements ICommandHandler<CreateClientCommand,
   constructor(
     @Inject(ClientRepository)
     private readonly clientRepository: ClientRepository,
-    @Inject('LOGGER')
+    @Inject('winston')
     private readonly logger: Logger
   ) {}
 

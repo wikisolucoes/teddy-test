@@ -16,7 +16,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
     private readonly userRepository: UserRepository,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    @Inject('LOGGER')
+    @Inject('winston')
     private readonly logger: Logger
   ) {}
 
