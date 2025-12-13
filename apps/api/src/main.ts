@@ -37,10 +37,6 @@ async function bootstrap() {
     .setDescription('API de gerenciamento de clientes')
     .setVersion('1.0')
     .addBearerAuth()
-    .addTag('auth', 'Autenticação e autorização')
-    .addTag('clients', 'Gerenciamento de clientes')
-    .addTag('dashboard', 'Estatísticas e métricas')
-    .addTag('health', 'Health checks e métricas')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

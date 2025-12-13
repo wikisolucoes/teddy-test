@@ -15,6 +15,7 @@ import {
   ApiTags,
   ApiOperation,
   ApiResponse,
+  ApiBody,
   ApiBearerAuth,
   ApiQuery,
   ApiParam,
@@ -35,7 +36,7 @@ import {
   type UpdateClientDto,
 } from '../../application/update-client/dtos/update-client.dto.js';
 
-@ApiTags('clients')
+@ApiTags('Clients')
 @Controller('clients')
 @UseGuards(JwtAuthGuard)
 @ApiBearerAuth()
@@ -44,7 +45,22 @@ export class ClientsController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new client' })
-  @ApiResponse({ status: 201, description: 'Client created successfully' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      required: ['name', 'email', 'cpf', 'phone'],
+      properties: {
+        name: { type: 'string', example: 'João Silva', description: 'Client name (3-100 characters)' },
+        email: { type: 'string', format: 'email', example: 'joao.silva@example.com', description: 'Client email address' },
+        cpf: { type: 'string', example: '123.456.789-09', description: 'CPF in format XXX.XXX.XXX-XX or 11 digits' },
+        phone: { type: 'string', example: '(11) 98765-4321', description: 'Brazilian phone number' },
+      },
+    },
+  })
+  @ApiResponse({ 
+    status: 201, 
+    description: 'Client created successfully'
+  })
   @ApiResponse({ status: 400, description: 'Invalid input data' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 409, description: 'Email or CPF already in use' })
@@ -65,7 +81,10 @@ export class ClientsController {
     enum: ['name', 'email', 'createdAt', 'accessCount'],
   })
   @ApiQuery({ name: 'sortOrder', required: false, enum: ['ASC', 'DESC'] })
-  @ApiResponse({ status: 200, description: 'Clients list retrieved successfully' })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Clients list retrieved successfully'
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async list(@Query(new ZodValidationPipe(ListClientsSchema)) dto: ListClientsDto) {
     return this.clientService.list(dto);
@@ -90,6 +109,17 @@ export class ClientsController {
 
   @Put(':id')
   @ApiOperation({ summary: 'Update a client' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        name: { type: 'string', example: 'João Silva', description: 'Client name (3-100 characters)' },
+        email: { type: 'string', format: 'email', example: 'joao.silva@example.com', description: 'Client email address' },
+        cpf: { type: 'string', example: '123.456.789-09', description: 'CPF in format XXX.XXX.XXX-XX or 11 digits' },
+        phone: { type: 'string', example: '(11) 98765-4321', description: 'Brazilian phone number' },
+      },
+    },
+  })
   @ApiParam({
     name: 'id',
     description: 'Client ID (UUID)',
