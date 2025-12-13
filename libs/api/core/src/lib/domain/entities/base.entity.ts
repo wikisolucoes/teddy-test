@@ -1,20 +1,18 @@
-import {
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-} from 'typeorm';
-
 export abstract class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
-  id!: string;
+  public readonly id: string;
+  public readonly createdAt: Date;
+  public readonly updatedAt: Date;
+  public readonly deletedAt: Date | null;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
-  createdAt!: Date;
-
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
-  updatedAt!: Date;
-
-  @DeleteDateColumn({ type: 'timestamp', name: 'deleted_at', nullable: true })
-  deletedAt?: Date;
+  constructor(
+    id?: string,
+    createdAt?: Date,
+    updatedAt?: Date,
+    deletedAt?: Date | null
+  ) {
+    this.id = id ?? crypto.randomUUID();
+    this.createdAt = createdAt ?? new Date();
+    this.updatedAt = updatedAt ?? new Date();
+    this.deletedAt = deletedAt ?? null;
+  }
 }
