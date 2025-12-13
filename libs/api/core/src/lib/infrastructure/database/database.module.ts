@@ -8,7 +8,7 @@ import { writeDataSourceOptions, readDataSourceOptions } from './typeorm.config.
     // Conexão WRITE (padrão) - usada por Commands
     TypeOrmModule.forRoot({
       ...writeDataSourceOptions,
-      name: 'default',
+      name: 'write',
     }),
     
     // Conexão READ - usada por Queries
