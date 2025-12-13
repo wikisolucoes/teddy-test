@@ -1,10 +1,16 @@
 import { DataSource, type DataSourceOptions } from 'typeorm';
-import { join } from 'path';
+import { CreateUsersTable1734000000000 } from './migrations/1734000000000-CreateUsersTable.js';
+import { CreateClientsTable1734041391000 } from './migrations/1734041391000-CreateClientsTable.js';
+import { SeedAdminUser1734000000001 } from './seeds/1734000000001-SeedAdminUser.js';
 
 const baseConfig = {
   type: 'postgres' as const,
-  entities: [join(__dirname, '../../../**/*.schema.{ts,js}')],
-  migrations: [join(__dirname, './migrations/*.{ts,js}')],
+  entities: [],
+  migrations: [
+    CreateUsersTable1734000000000,
+    CreateClientsTable1734041391000,
+    SeedAdminUser1734000000001,
+  ],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',
 };

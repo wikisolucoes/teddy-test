@@ -76,6 +76,20 @@
           }
         }
       },
+      "migration:run": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "typeorm-ts-node-esm migration:run -d libs/api/core/src/lib/infrastructure/database/typeorm.config.ts",
+          "cwd": "."
+        }
+      },
+      "migration:revert": {
+        "executor": "nx:run-commands",
+        "options": {
+          "command": "typeorm-ts-node-esm migration:revert -d libs/api/core/src/lib/infrastructure/database/typeorm.config.ts",
+          "cwd": "."
+        }
+      },
       "test": {
         "options": {
           "passWithNoTests": true
