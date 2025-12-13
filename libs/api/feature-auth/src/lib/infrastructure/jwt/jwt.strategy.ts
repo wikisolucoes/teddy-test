@@ -1,8 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, Inject } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
-import type { IUserRepository } from '../../domain/repositories/user.repository.interface.js';
+import { UserRepository } from '../../application/ports/user.repository.js';
 
 interface JwtPayload {
   sub: string;
@@ -13,7 +13,8 @@ interface JwtPayload {
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
-    private readonly userRepository: IUserRepository
+    @Inject(UserRepository)
+    private readonly userRepository: UserRepository
   ) {
     const secret = configService.get<string>('JWT_SECRET');
     if (!secret) {
