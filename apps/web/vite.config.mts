@@ -1,6 +1,7 @@
 /// <reference types='vitest' />
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import path from 'path';
 
 export default defineConfig(() => ({
   root: import.meta.dirname,
@@ -14,10 +15,16 @@ export default defineConfig(() => ({
     host: 'localhost',
   },
   plugins: [react()],
-  // Uncomment this if you are using workers.
-  // worker: {
-  //  plugins: [],
-  // },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src'),
+      '@teddy-monorepo/web/core': path.resolve(__dirname, '../../libs/web/core/src/index.ts'),
+      '@teddy-monorepo/web/shared': path.resolve(__dirname, '../../libs/web/shared/src/index.ts'),
+      '@teddy-monorepo/web/feature-auth': path.resolve(__dirname, '../../libs/web/feature-auth/src/index.ts'),
+      '@teddy-monorepo/web/feature-dashboard': path.resolve(__dirname, '../../libs/web/feature-dashboard/src/index.ts'),
+      '@teddy-monorepo/web/feature-clients': path.resolve(__dirname, '../../libs/web/feature-clients/src/index.ts'),
+    },
+  },
   build: {
     outDir: './dist',
     emptyOutDir: true,
