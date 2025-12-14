@@ -26,11 +26,12 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
     const { email, password } = command;
 
     const emailVO = new Email(email);
+    const normalizedEmail = emailVO.getValue().toLowerCase();
 
-    const user = await this.userRepository.findByEmail(emailVO.getValue());
+    const user = await this.userRepository.findByEmail(normalizedEmail);
 
     if (!user || !user.isActive) {
-      this.logger.warn('Login attempt failed', { email: emailVO.getValue() });
+      this.logger.warn('Login attempt failed', { email: normalizedEmail });
       this.prometheusService.incrementAuthAttempts('failed');
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -39,7 +40,7 @@ export class LoginHandler implements ICommandHandler<LoginCommand, AuthResponseD
 
     if (!isPasswordValid) {
       this.logger.warn('Login attempt failed - wrong password', { 
-        email: emailVO.getValue() 
+        email: normalizedEmail 
       });
       this.prometheusService.incrementAuthAttempts('failed');
       throw new UnauthorizedException('Invalid credentials');

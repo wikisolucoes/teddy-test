@@ -1,5 +1,6 @@
 import { Controller, Post, Body, Get, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ZodValidationPipe, Public, CurrentUser } from '@teddy-monorepo/api/core';
 import type { LoginDto } from '../application/login/dtos/login.dto.js';
 import { LoginDtoSchema } from '../application/login/dtos/login.dto.js';
@@ -16,6 +17,7 @@ export class AuthController {
 
   @Public()
   @Post('login')
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOperation({ 
     summary: 'User login',
     description: 'Authenticate user with email and password' 

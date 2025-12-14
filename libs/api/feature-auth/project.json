@@ -1,5 +1,5 @@
 {
-  "name": "feature-auth",
+  "name": "@teddy-monorepo/api/feature-auth",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/feature-auth/src",
   "projectType": "library",
