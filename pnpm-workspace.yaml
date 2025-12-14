@@ -2,4 +2,5 @@ packages:
   - 'packages/*'
   - 'apps/*'
   - 'libs/api/*'
+  - 'libs/web/*'
 autoInstallPeers: true

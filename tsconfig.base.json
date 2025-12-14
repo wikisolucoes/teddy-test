@@ -24,7 +24,12 @@
       "@teddy-monorepo/api/feature-auth": ["libs/api/feature-auth/src/index.ts"],
       "@teddy-monorepo/api/feature-clients": ["libs/api/feature-clients/src/index.ts"],
       "@teddy-monorepo/api/feature-dashboard": ["libs/api/feature-dashboard/src/index.ts"],
-      "@teddy-monorepo/api/feature-health": ["libs/api/feature-health/src/index.ts"]
+      "@teddy-monorepo/api/feature-health": ["libs/api/feature-health/src/index.ts"],
+      "@teddy-monorepo/web/core": ["libs/web/core/src/index.ts"],
+      "@teddy-monorepo/web/feature-auth": ["libs/web/feature-auth/src/index.ts"],
+      "@teddy-monorepo/web/feature-clients": ["libs/web/feature-clients/src/index.ts"],
+      "@teddy-monorepo/web/feature-dashboard": ["libs/web/feature-dashboard/src/index.ts"],
+      "@teddy-monorepo/web/shared": ["libs/web/shared/src/index.ts"]
     }
   }
 }

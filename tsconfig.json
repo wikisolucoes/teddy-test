@@ -29,6 +29,21 @@
     },
     {
       "path": "./libs/api/feature-health"
+    },
+    {
+      "path": "./libs/web/feature-clients"
+    },
+    {
+      "path": "./libs/web/feature-auth"
+    },
+    {
+      "path": "./libs/web/shared"
+    },
+    {
+      "path": "./libs/web/feature-dashboard"
+    },
+    {
+      "path": "./libs/web/core"
     }
   ]
 }
