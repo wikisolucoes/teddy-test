@@ -21,6 +21,22 @@
         "^production"
       ],
       "outputs": ["{projectRoot}/dist"]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --build --emitDeclarationOnly tsconfig.lib.json",
+        "cwd": "libs/api/feature-auth"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.lib.json",
+        "{projectRoot}/src/**/*.ts",
+        "!{projectRoot}/src/**/*.spec.ts",
+        "^production"
+      ]
     }
   }
 }
