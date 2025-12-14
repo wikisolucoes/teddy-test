@@ -13,7 +13,7 @@ export class GetDashboardStatsHandler
     private readonly clientRepository: ClientRepository
   ) {}
 
-  async execute(): Promise<DashboardStatsDto> {
+  async execute(query: GetDashboardStatsQuery): Promise<DashboardStatsDto> {
     const [active, deleted, newThisMonth] = await Promise.all([
       this.clientRepository.countActive(),
       this.clientRepository.countDeleted(),

@@ -6,9 +6,18 @@ import {
   ApiBearerAuth,
   ApiQuery,
 } from '@nestjs/swagger';
+import { ZodValidationPipe } from '@teddy-monorepo/api/core';
 import { JwtAuthGuard } from '@teddy-monorepo/api/feature-auth';
 import { DashboardService } from '../../application/services/dashboard.service.js';
 import { DEFAULT_LATEST_CLIENTS_LIMIT, DEFAULT_CHART_MONTHS } from '../../application/shared/constants.js';
+import {
+  GetLatestClientsSchema,
+  type GetLatestClientsDto,
+} from '../dtos/get-latest-clients.dto.js';
+import {
+  GetChartDataSchema,
+  type GetChartDataDto,
+} from '../dtos/get-chart-data.dto.js';
 
 @ApiTags('Dashboard')
 @Controller('dashboard')
@@ -49,17 +58,20 @@ export class DashboardController {
     name: 'limit',
     required: false,
     type: Number,
-    description: 'Number of clients to return',
+    description: 'Number of clients to return (1-100)',
     example: DEFAULT_LATEST_CLIENTS_LIMIT,
   })
   @ApiResponse({
     status: 200,
     description: 'Latest clients retrieved successfully',
   })
+  @ApiResponse({ status: 400, description: 'Invalid limit parameter' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getLatest(@Query('limit') limit?: string) {
-    const parsedLimit = limit ? parseInt(limit, 10) : DEFAULT_LATEST_CLIENTS_LIMIT;
-    return this.dashboardService.getLatestClients(parsedLimit);
+  async getLatest(
+    @Query(new ZodValidationPipe(GetLatestClientsSchema)) dto: GetLatestClientsDto
+  ) {
+    const limit = dto.limit ?? DEFAULT_LATEST_CLIENTS_LIMIT;
+    return this.dashboardService.getLatestClients(limit);
   }
 
   @Get('chart')
@@ -71,7 +83,7 @@ export class DashboardController {
     name: 'months',
     required: false,
     type: Number,
-    description: 'Number of months to include',
+    description: 'Number of months to include (1-24)',
     example: DEFAULT_CHART_MONTHS,
   })
   @ApiResponse({
@@ -93,9 +105,12 @@ export class DashboardController {
       },
     },
   })
+  @ApiResponse({ status: 400, description: 'Invalid months parameter' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async getChartData(@Query('months') months?: string) {
-    const parsedMonths = months ? parseInt(months, 10) : DEFAULT_CHART_MONTHS;
-    return this.dashboardService.getChartData(parsedMonths);
+  async getChartData(
+    @Query(new ZodValidationPipe(GetChartDataSchema)) dto: GetChartDataDto
+  ) {
+    const months = dto.months ?? DEFAULT_CHART_MONTHS;
+    return this.dashboardService.getChartData(months);
   }
 }
