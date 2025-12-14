@@ -5,6 +5,7 @@ import { AppModule } from './app/app.module.js';
 import {
   AllExceptionsFilter,
   LoggingInterceptor,
+  RequestContextInterceptor,
 } from '@teddy-monorepo/api/core';
 
 async function bootstrap() {
@@ -30,7 +31,10 @@ async function bootstrap() {
 
   app.useGlobalFilters(new AllExceptionsFilter(logger));
 
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
+  app.useGlobalInterceptors(
+    new RequestContextInterceptor(logger),
+    new LoggingInterceptor(logger)
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Teddy API')

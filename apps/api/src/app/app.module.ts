@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 
@@ -21,6 +23,14 @@ import { FeatureHealthModule } from '@teddy-monorepo/api/feature-health';
       envFilePath: '.env',
     }),
 
+    // Rate Limiting
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000, // 60 seconds
+        limit: parseInt(process.env.THROTTLE_LIMIT || '10'),
+      },
+    ]),
+
     // Core Infrastructure
     DatabaseModule,
     LoggerModule,
@@ -33,6 +43,12 @@ import { FeatureHealthModule } from '@teddy-monorepo/api/feature-health';
     FeatureHealthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}

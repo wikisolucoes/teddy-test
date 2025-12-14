@@ -13,6 +13,9 @@ const baseConfig = {
   ],
   synchronize: false,
   logging: process.env.NODE_ENV === 'development',
+  extra: {
+    query_timeout: 30000,
+  },
 };
 
 export const writeDataSourceOptions: DataSourceOptions = {
