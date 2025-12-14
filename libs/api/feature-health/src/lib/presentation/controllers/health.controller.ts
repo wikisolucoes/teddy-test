@@ -8,6 +8,7 @@ import {
   DiskHealthIndicator,
   HealthCheckResult,
 } from '@nestjs/terminus';
+import { HealthConfig } from '../../config/health.config.js';
 
 @ApiTags('Health')
 @Controller('health')
@@ -16,7 +17,8 @@ export class HealthController {
     private readonly health: HealthCheckService,
     private readonly db: TypeOrmHealthIndicator,
     private readonly memory: MemoryHealthIndicator,
-    private readonly disk: DiskHealthIndicator
+    private readonly disk: DiskHealthIndicator,
+    private readonly healthConfig: HealthConfig
   ) {}
 
   @Get()
@@ -82,14 +84,14 @@ export class HealthController {
       () => this.db.pingCheck('database-write', { connection: 'write' }),
       () => this.db.pingCheck('database-read', { connection: 'read' }),
       
-      // Memory health checks (300MB threshold)
-      () => this.memory.checkHeap('memory-heap', 300 * 1024 * 1024),
-      () => this.memory.checkRSS('memory-rss', 300 * 1024 * 1024),
+      // Memory health checks
+      () => this.memory.checkHeap('memory-heap', this.healthConfig.memoryThresholdBytes),
+      () => this.memory.checkRSS('memory-rss', this.healthConfig.memoryThresholdBytes),
       
-      // Disk health check (90% threshold)
+      // Disk health check
       () => this.disk.checkStorage('storage', { 
         path: '/', 
-        thresholdPercent: 0.9 
+        thresholdPercent: this.healthConfig.diskThresholdPercent 
       }),
     ]);
   }
