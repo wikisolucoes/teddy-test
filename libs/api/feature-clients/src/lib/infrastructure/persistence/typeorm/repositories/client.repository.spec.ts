@@ -396,5 +396,61 @@ describe('TypeOrmClientRepository', () => {
       expect(result).toHaveLength(3);
       expect(result.every(r => r.count === 0)).toBe(true);
     });
+
+    it('should return correct months in chronological order', async () => {
+      const qb = new MockQueryBuilder();
+      readRepo.createQueryBuilder.mockReturnValue(qb);
+
+      qb.getRawMany.mockResolvedValue([]);
+
+      const result = await repository.countClientsByMonth(3);
+      const now = new Date();
+
+      expect(result).toHaveLength(3);
+      
+      // Verificar que os meses são realmente os últimos 3 meses
+      const expectedMonth0 = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+      const expectedMonth1 = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const expectedMonth2 = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      expect(result[0].month.getFullYear()).toBe(expectedMonth0.getFullYear());
+      expect(result[0].month.getMonth()).toBe(expectedMonth0.getMonth());
+      
+      expect(result[1].month.getFullYear()).toBe(expectedMonth1.getFullYear());
+      expect(result[1].month.getMonth()).toBe(expectedMonth1.getMonth());
+      
+      expect(result[2].month.getFullYear()).toBe(expectedMonth2.getFullYear());
+      expect(result[2].month.getMonth()).toBe(expectedMonth2.getMonth());
+    });
+
+    it('should handle year boundaries correctly', async () => {
+      const qb = new MockQueryBuilder();
+      readRepo.createQueryBuilder.mockReturnValue(qb);
+
+      const now = new Date();
+      // Criar 3 meses que podem atravessar ano
+      const month0 = new Date(now.getFullYear(), now.getMonth() - 2, 1);
+      const month1 = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+      const month2 = new Date(now.getFullYear(), now.getMonth(), 1);
+
+      const mockData = [
+        { month: month0, count: '5' },
+        { month: month1, count: '10' },
+        { month: month2, count: '15' },
+      ];
+
+      qb.getRawMany.mockResolvedValue(mockData);
+
+      const result = await repository.countClientsByMonth(3);
+
+      expect(result).toHaveLength(3);
+      // Verificar que os anos e meses são preservados corretamente
+      expect(result[0].month.getFullYear()).toBe(month0.getFullYear());
+      expect(result[0].month.getMonth()).toBe(month0.getMonth());
+      expect(result[1].month.getFullYear()).toBe(month1.getFullYear());
+      expect(result[1].month.getMonth()).toBe(month1.getMonth());
+      expect(result[2].month.getFullYear()).toBe(month2.getFullYear());
+      expect(result[2].month.getMonth()).toBe(month2.getMonth());
+    });
   });
 });

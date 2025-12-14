@@ -20,20 +20,21 @@ export class CreateClientHandler implements ICommandHandler<CreateClientCommand,
   async execute(command: CreateClientCommand): Promise<ClientDto> {
     const cpf = new CPF(command.cpf);
     const phone = new Phone(command.phone);
+    const normalizedEmail = command.email.toLowerCase();
     
-    const existingByEmail = await this.clientRepository.findByEmail(command.email);
+    const existingByEmail = await this.clientRepository.findByEmail(normalizedEmail, true);
     if (existingByEmail) {
       throw new ConflictException('Email already exists');
     }
     
-    const existingByCpf = await this.clientRepository.findByCpf(cpf.getValue());
+    const existingByCpf = await this.clientRepository.findByCpf(cpf.getValue(), true);
     if (existingByCpf) {
       throw new ConflictException('CPF already exists');
     }
     
     const client = new Client(
       command.name,
-      command.email,
+      normalizedEmail,
       cpf.getValue(),
       phone.getValue(),
       0 // accessCount

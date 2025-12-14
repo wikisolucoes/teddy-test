@@ -135,7 +135,7 @@ describe('UpdateClientHandler', () => {
     await expect(handler.execute(command)).rejects.toThrow('Email already in use');
 
     expect(clientRepository.findById).toHaveBeenCalledWith('123');
-    expect(clientRepository.findByEmail).toHaveBeenCalledWith('jane@example.com');
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('jane@example.com', true);
     expect(clientRepository.save).not.toHaveBeenCalled();
   });
 
@@ -173,7 +173,7 @@ describe('UpdateClientHandler', () => {
     await expect(handler.execute(command)).rejects.toThrow('CPF already in use');
 
     expect(clientRepository.findById).toHaveBeenCalledWith('123');
-    expect(clientRepository.findByCpf).toHaveBeenCalledWith('11144477735');
+    expect(clientRepository.findByCpf).toHaveBeenCalledWith('11144477735', true);
     expect(clientRepository.save).not.toHaveBeenCalled();
   });
 
@@ -369,5 +369,97 @@ describe('UpdateClientHandler', () => {
     clientRepository.findById.mockResolvedValue(existingClient);
 
     await expect(handler.execute(command)).rejects.toThrow('Invalid phone number');
+  });
+
+  it('should normalize email to lowercase and prevent case-insensitive duplicates', async () => {
+    const command = new UpdateClientCommand(
+      '123',
+      'John Doe',
+      'JOHN@EXAMPLE.COM',
+      undefined,
+      undefined
+    );
+
+    const existingClient = new Client(
+      'John Doe',
+      'old@example.com',
+      '12345678909',
+      '11987654321',
+      5,
+      '123',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    const conflictingClient = new Client(
+      'Jane Doe',
+      'john@example.com',
+      '11144477735',
+      '11999998888',
+      0,
+      '456',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    clientRepository.findById.mockResolvedValue(existingClient);
+    clientRepository.findByEmail.mockResolvedValue(conflictingClient);
+
+    // Deve rejeitar porque email é normalizado para lowercase antes da busca
+    await expect(handler.execute(command)).rejects.toThrow('Email already in use');
+
+    // Verifica que busca foi feita com email normalizado
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com', true);
+  });
+
+  it('should save email in lowercase format', async () => {
+    const command = new UpdateClientCommand(
+      '123',
+      'John Doe',
+      'JOHN@EXAMPLE.COM',
+      undefined,
+      undefined
+    );
+
+    const existingClient = new Client(
+      'John Doe',
+      'old@example.com',
+      '12345678909',
+      '11987654321',
+      5,
+      '123',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    clientRepository.findById.mockResolvedValue(existingClient);
+    clientRepository.findByEmail.mockResolvedValue(null);
+
+    const updatedClient = new Client(
+      'John Doe',
+      'john@example.com',
+      '12345678909',
+      '11987654321',
+      5,
+      '123',
+      existingClient.createdAt,
+      new Date(),
+      null
+    );
+
+    clientRepository.save.mockResolvedValue(updatedClient);
+
+    const result = await handler.execute(command);
+
+    // Email deve ser salvo em lowercase
+    expect(result.email).toBe('john@example.com');
+    expect(clientRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'john@example.com',
+      })
+    );
   });
 });

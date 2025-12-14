@@ -2,9 +2,12 @@ import { BadRequestException } from '@nestjs/common';
 
 export class Phone {
   private readonly value: string;
+  private readonly hasCountryCode: boolean;
 
   constructor(phone: string) {
     const cleaned = this.clean(phone);
+    
+    this.hasCountryCode = cleaned.startsWith('55') && cleaned.length > 11;
     
     if (!this.isValid(cleaned)) {
       throw new BadRequestException('Invalid phone number');
@@ -50,14 +53,21 @@ export class Phone {
   }
 
   getValue(): string {
+    if (this.hasCountryCode) {
+      return this.value.substring(2); // Remove '55' prefix
+    }
     return this.value;
   }
 
   getFormattedValue(): string {
-    if (this.value.length === 11) {
-      return this.value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3'); // Mobile: (XX) XXXXX-XXXX
+    const phoneDigits = this.hasCountryCode ? this.value.substring(2) : this.value;
+    
+    if (phoneDigits.length === 11) {
+      const formatted = phoneDigits.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+      return this.hasCountryCode ? `+55 ${formatted}` : formatted;
     } else {
-      return this.value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3'); // Landline: (XX) XXXX-XXXX
+      const formatted = phoneDigits.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+      return this.hasCountryCode ? `+55 ${formatted}` : formatted;
     }
   }
 }

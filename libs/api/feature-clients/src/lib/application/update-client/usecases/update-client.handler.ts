@@ -26,7 +26,7 @@ export class UpdateClientHandler implements ICommandHandler<UpdateClientCommand,
       cpfValue = cpf.getValue();
 
       if (cpfValue !== existing.cpf) {
-        const existingByCpf = await this.clientRepository.findByCpf(cpfValue);
+        const existingByCpf = await this.clientRepository.findByCpf(cpfValue, true);
         if (existingByCpf && existingByCpf.id !== command.id) {
           throw new ConflictException('CPF already in use');
         }
@@ -39,16 +39,20 @@ export class UpdateClientHandler implements ICommandHandler<UpdateClientCommand,
       phoneValue = phone.getValue();
     }
 
-    if (command.email && command.email !== existing.email) {
-      const existingByEmail = await this.clientRepository.findByEmail(command.email);
-      if (existingByEmail && existingByEmail.id !== command.id) {
-        throw new ConflictException('Email already in use');
+    let emailValue = existing.email;
+    if (command.email) {
+      emailValue = command.email.toLowerCase();
+      if (emailValue !== existing.email) {
+        const existingByEmail = await this.clientRepository.findByEmail(emailValue, true);
+        if (existingByEmail && existingByEmail.id !== command.id) {
+          throw new ConflictException('Email already in use');
+        }
       }
     }
 
     const updated = new Client(
       command.name ?? existing.name,
-      command.email ?? existing.email,
+      emailValue,
       cpfValue,
       phoneValue,
       existing.accessCount,

@@ -2,7 +2,15 @@ import { z } from 'zod';
 
 export const UpdateClientSchema = z
   .object({
-    name: z.string().min(3).max(100).optional(),
+    name: z
+      .string()
+      .min(3, 'Name must be at least 3 characters')
+      .max(100, 'Name must be at most 100 characters')
+      .regex(
+        /^[a-zA-ZÀ-ÿ\s'-]+$/,
+        'Name must contain only letters, spaces, hyphens and apostrophes'
+      )
+      .optional(),
     email: z.string().email().optional(),
     cpf: z
       .string()

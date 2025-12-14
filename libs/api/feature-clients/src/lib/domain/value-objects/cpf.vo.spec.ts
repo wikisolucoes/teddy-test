@@ -93,4 +93,24 @@ describe('CPF Value Object', () => {
       expect(cpf.getValue()).toBe('12345678909');
     });
   });
-});
+
+  describe('Immutability (DDD)', () => {
+    it('should be immutable - value cannot be changed externally', () => {
+      const cpf = new CPF('123.456.789-09');
+      const value1 = cpf.getValue();
+      const value2 = cpf.getValue();
+      
+      expect(value1).toBe(value2);
+      expect(value1).toBe('12345678909');
+    });
+
+    it('should return same formatted value on multiple calls', () => {
+      const cpf = new CPF('12345678909');
+      const formatted1 = cpf.getFormattedValue();
+      const formatted2 = cpf.getFormattedValue();
+      
+      expect(formatted1).toBe(formatted2);
+      expect(formatted1).toBe('123.456.789-09');
+    });
+  });
+});  

@@ -1,4 +1,5 @@
 import { BaseEntity } from '@teddy-monorepo/api/core';
+import { BadRequestException } from '@nestjs/common';
 
 export class Client extends BaseEntity {
   public readonly name: string;
@@ -19,6 +20,15 @@ export class Client extends BaseEntity {
     deletedAt?: Date | null
   ) {
     super(id, createdAt, updatedAt, deletedAt);
+    
+    const now = new Date();
+    if (createdAt && createdAt > now) {
+      throw new BadRequestException('createdAt cannot be in the future');
+    }
+    if (updatedAt && updatedAt > now) {
+      throw new BadRequestException('updatedAt cannot be in the future');
+    }
+    
     this.name = name;
     this.email = email;
     this.cpf = cpf;

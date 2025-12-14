@@ -10,6 +10,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -20,6 +21,7 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { ZodValidationPipe } from '@teddy-monorepo/api/core';
 import { JwtAuthGuard } from '@teddy-monorepo/api/feature-auth';
 import { ClientService } from '../../application/services/client.service.js';
@@ -44,6 +46,7 @@ export class ClientsController {
   constructor(private readonly clientService: ClientService) {}
 
   @Post()
+  @Throttle({ default: { limit: 20, ttl: 60000 } }) // 20 creations per minute
   @ApiOperation({ summary: 'Create a new client' })
   @ApiBody({
     schema: {
@@ -103,7 +106,7 @@ export class ClientsController {
   @ApiResponse({ status: 200, description: 'Client retrieved successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Client not found' })
-  async getById(@Param('id') id: string) {
+  async getById(@Param('id', ParseUUIDPipe) id: string) {
     return this.clientService.getById(id);
   }
 
@@ -131,7 +134,7 @@ export class ClientsController {
   @ApiResponse({ status: 404, description: 'Client not found' })
   @ApiResponse({ status: 409, description: 'Email or CPF already in use' })
   async update(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body(new ZodValidationPipe(UpdateClientSchema)) dto: UpdateClientDto
   ) {
     return this.clientService.update(id, dto);
@@ -148,7 +151,7 @@ export class ClientsController {
   @ApiResponse({ status: 204, description: 'Client deleted successfully' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 404, description: 'Client not found' })
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     await this.clientService.delete(id);
   }
 }

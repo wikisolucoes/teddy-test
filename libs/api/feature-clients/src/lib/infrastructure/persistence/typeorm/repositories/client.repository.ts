@@ -57,14 +57,32 @@ export class TypeOrmClientRepository extends ClientRepository {
     return schemas.map(s => s.mapToDomain());
   }
 
-  async findByEmail(email: string): Promise<Client | null> {
+  async findByEmail(email: string, includeDeleted = false): Promise<Client | null> {
+    if (includeDeleted) {
+      const schema = await this.readRepo
+        .createQueryBuilder('client')
+        .withDeleted()
+        .where('client.email = :email', { email })
+        .getOne();
+      return schema ? schema.mapToDomain() : null;
+    }
+    
     const schema = await this.readRepo.findOne({
       where: { email, deletedAt: IsNull() }
     });
     return schema ? schema.mapToDomain() : null;
   }
 
-  async findByCpf(cpf: string): Promise<Client | null> {
+  async findByCpf(cpf: string, includeDeleted = false): Promise<Client | null> {
+    if (includeDeleted) {
+      const schema = await this.readRepo
+        .createQueryBuilder('client')
+        .withDeleted()
+        .where('client.cpf = :cpf', { cpf })
+        .getOne();
+      return schema ? schema.mapToDomain() : null;
+    }
+    
     const schema = await this.readRepo.findOne({
       where: { cpf, deletedAt: IsNull() }
     });
@@ -77,9 +95,10 @@ export class TypeOrmClientRepository extends ClientRepository {
       .where('client.deleted_at IS NULL');
 
     if (options.search) {
+      const sanitizedSearch = options.search.replace(/[%_]/g, '');
       qb.andWhere(
         '(client.name ILIKE :search OR client.email ILIKE :search)',
-        { search: `%${options.search}%` }
+        { search: `%${sanitizedSearch}%` }
       );
     }
 
@@ -90,7 +109,7 @@ export class TypeOrmClientRepository extends ClientRepository {
     qb.orderBy(`client.${sortBy}`, sortOrder);
 
     const page = options.page || 1;
-    const limit = options.limit || 10;
+    const limit = Math.min(options.limit || 10, 100);
     qb.skip((page - 1) * limit).take(limit);
 
     const schemas = await qb.getMany();
@@ -131,6 +150,10 @@ export class TypeOrmClientRepository extends ClientRepository {
   }
 
   async countClientsByMonth(months: number): Promise<Array<{ month: Date; count: number }>> {
+    if (months < 1) {
+      throw new Error('Months must be at least 1');
+    }
+
     const now = new Date();
     const startDate = new Date(now.getFullYear(), now.getMonth() - (months - 1), 1);
 

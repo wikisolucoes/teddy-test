@@ -84,8 +84,8 @@ describe('CreateClientHandler', () => {
       updatedAt: savedClient.updatedAt,
     });
 
-    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
-    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909');
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com', true);
+    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909', true);
     expect(clientRepository.save).toHaveBeenCalled();
     expect(logger.info).toHaveBeenCalledWith('Client created', { clientId: '123' });
   });
@@ -115,9 +115,39 @@ describe('CreateClientHandler', () => {
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     await expect(handler.execute(command)).rejects.toThrow('Email already exists');
 
-    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com', true);
     expect(clientRepository.findByCpf).not.toHaveBeenCalled();
     expect(clientRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('should check email before CPF to fail fast on email conflicts', async () => {
+    const command = new CreateClientCommand(
+      'John Doe',
+      'john@example.com',
+      '123.456.789-09',
+      '(11) 98765-4321'
+    );
+
+    const existingClient = new Client(
+      'Jane Doe',
+      'john@example.com',
+      '11144477735',
+      '11987654321',
+      0,
+      '456',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    clientRepository.findByEmail.mockResolvedValue(existingClient);
+    clientRepository.findByCpf.mockResolvedValue(null);
+
+    await expect(handler.execute(command)).rejects.toThrow('Email already exists');
+
+    // CPF check should not be called if email already exists
+    expect(clientRepository.findByEmail).toHaveBeenCalled();
+    expect(clientRepository.findByCpf).not.toHaveBeenCalled();
   });
 
   it('should throw ConflictException when CPF already exists', async () => {
@@ -146,9 +176,39 @@ describe('CreateClientHandler', () => {
     await expect(handler.execute(command)).rejects.toThrow(ConflictException);
     await expect(handler.execute(command)).rejects.toThrow('CPF already exists');
 
-    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com');
-    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909');
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com', true);
+    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909', true);
     expect(clientRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('should prioritize email conflict over CPF conflict', async () => {
+    const command = new CreateClientCommand(
+      'John Doe',
+      'existing@example.com',
+      '123.456.789-09',
+      '(11) 98765-4321'
+    );
+
+    const existingByEmail = new Client(
+      'Client With Email',
+      'existing@example.com',
+      '11144477735',
+      '11999998888',
+      0,
+      '123',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    // Simula que tanto email quanto CPF já existem
+    clientRepository.findByEmail.mockResolvedValue(existingByEmail);
+    // CPF check não deve ser chamado pois email já existe
+
+    await expect(handler.execute(command)).rejects.toThrow('Email already exists');
+
+    expect(clientRepository.findByEmail).toHaveBeenCalled();
+    expect(clientRepository.findByCpf).not.toHaveBeenCalled();
   });
 
   it('should validate and normalize CPF before saving', async () => {
@@ -178,7 +238,7 @@ describe('CreateClientHandler', () => {
 
     await handler.execute(command);
 
-    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909');
+    expect(clientRepository.findByCpf).toHaveBeenCalledWith('12345678909', true);
     expect(clientRepository.save).toHaveBeenCalledWith(
       expect.objectContaining({
         cpf: '12345678909',
@@ -305,5 +365,71 @@ describe('CreateClientHandler', () => {
 
     expect(result.cpf).toBe('123.456.789-09');
     expect(result.phone).toBe('(11) 98765-4321');
+  });
+
+  it('should normalize email to lowercase and prevent case-insensitive duplicates', async () => {
+    const command = new CreateClientCommand(
+      'John Doe',
+      'JOHN@EXAMPLE.COM',
+      '123.456.789-09',
+      '(11) 98765-4321'
+    );
+
+    // Simula que banco de dados já tem john@example.com (lowercase)
+    const existingClient = new Client(
+      'Jane Doe',
+      'john@example.com',
+      '11144477735',
+      '11987654321',
+      0,
+      '456',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    clientRepository.findByEmail.mockResolvedValue(existingClient);
+
+    // Deve rejeitar porque email é normalizado para lowercase antes da busca
+    await expect(handler.execute(command)).rejects.toThrow('Email already exists');
+
+    // Verifica que busca foi feita com email normalizado
+    expect(clientRepository.findByEmail).toHaveBeenCalledWith('john@example.com', true);
+  });
+
+  it('should save email in lowercase format', async () => {
+    const command = new CreateClientCommand(
+      'John Doe',
+      'JOHN@EXAMPLE.COM',
+      '123.456.789-09',
+      '(11) 98765-4321'
+    );
+
+    clientRepository.findByEmail.mockResolvedValue(null);
+    clientRepository.findByCpf.mockResolvedValue(null);
+
+    const savedClient = new Client(
+      'John Doe',
+      'john@example.com',
+      '12345678909',
+      '11987654321',
+      0,
+      '123',
+      new Date(),
+      new Date(),
+      null
+    );
+
+    clientRepository.save.mockResolvedValue(savedClient);
+
+    const result = await handler.execute(command);
+
+    // Email deve ser salvo em lowercase
+    expect(result.email).toBe('john@example.com');
+    expect(clientRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: 'john@example.com',
+      })
+    );
   });
 });

@@ -4,7 +4,11 @@ export const CreateClientSchema = z.object({
   name: z
     .string()
     .min(3, 'Name must be at least 3 characters')
-    .max(100, 'Name must be at most 100 characters'),
+    .max(100, 'Name must be at most 100 characters')
+    .regex(
+      /^[a-zA-ZÀ-ÿ\s'-]+$/,
+      'Name must contain only letters, spaces, hyphens and apostrophes'
+    ),
   email: z.string().email('Invalid email format'),
   cpf: z
     .string()

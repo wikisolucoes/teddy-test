@@ -1,5 +1,5 @@
 {
-  "name": "feature-clients",
+  "name": "@teddy-monorepo/api/feature-clients",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/feature-clients/src",
   "projectType": "library",

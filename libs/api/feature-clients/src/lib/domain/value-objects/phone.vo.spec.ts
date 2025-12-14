@@ -17,9 +17,8 @@ describe('Phone Value Object', () => {
 
     it('should accept mobile phone with country code', () => {
       const phone = new Phone('5511987654321');
-      expect(phone.getValue()).toBe('5511987654321');
-      expect(phone.getFormattedValue()).toBeDefined();
-      expect(phone.getFormattedValue()).toContain('11');
+      expect(phone.getValue()).toBe('11987654321'); // getValue() strips country code for storage
+      expect(phone.getFormattedValue()).toBe('+55 (11) 98765-4321'); // getFormattedValue() preserves country code for display
     });
 
     it('should accept mobile phone from different DDD', () => {
@@ -126,16 +125,22 @@ describe('Phone Value Object', () => {
       expect(phone.getValue()).toBe('11987654321');
     });
 
-    it('should strip country code and validate correctly', () => {
+    it('should strip country code from mobile and validate correctly', () => {
       const phone = new Phone('+55 11 98765-4321');
-      expect(phone.getValue()).toBe('5511987654321');
+      // getValue() returns without country code (for storage)
+      expect(phone.getValue()).toBe('11987654321');
+      expect(phone.getValue()).toHaveLength(11);
+      // getFormattedValue() preserves country code (for display)
+      expect(phone.getFormattedValue()).toBe('+55 (11) 98765-4321');
     });
 
-    it('should handle country code with landline', () => {
+    it('should strip country code from landline and validate correctly', () => {
       const phone = new Phone('55 11 3456-7890');
-      expect(phone.getValue()).toBe('551134567890');
-      // Country code remains, formatting will differ
-      expect(phone.getValue()).toHaveLength(12);
+      // getValue() returns without country code (for storage)
+      expect(phone.getValue()).toBe('1134567890');
+      expect(phone.getValue()).toHaveLength(10);
+      // getFormattedValue() preserves country code (for display)
+      expect(phone.getFormattedValue()).toBe('+55 (11) 3456-7890');
     });
   });
 
@@ -155,6 +160,26 @@ describe('Phone Value Object', () => {
 
     it('should reject three-digit DDD', () => {
       expect(() => new Phone('100987654321')).toThrow(BadRequestException);
+    });
+  });
+
+  describe('Immutability (DDD)', () => {
+    it('should be immutable - value cannot be changed externally', () => {
+      const phone = new Phone('(11) 98765-4321');
+      const value1 = phone.getValue();
+      const value2 = phone.getValue();
+      
+      expect(value1).toBe(value2);
+      expect(value1).toBe('11987654321');
+    });
+
+    it('should return same formatted value on multiple calls', () => {
+      const phone = new Phone('11987654321');
+      const formatted1 = phone.getFormattedValue();
+      const formatted2 = phone.getFormattedValue();
+      
+      expect(formatted1).toBe(formatted2);
+      expect(formatted1).toBe('(11) 98765-4321');
     });
   });
 });
