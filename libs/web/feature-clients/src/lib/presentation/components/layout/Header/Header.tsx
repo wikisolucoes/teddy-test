@@ -1,8 +1,3 @@
-/**
- * Header Component - Cabeçalho fixo da aplicação
- * Seguindo design-prompt.md: Logo, Menu e Saudação
- */
-
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@teddy-monorepo/web/shared';
 import { ROUTES } from '@teddy-monorepo/web/shared';
@@ -12,9 +7,6 @@ interface HeaderProps {
   userName?: string;
 }
 
-/**
- * Header fixo com logo, menu e saudação
- */
 export function Header({ userName = 'Usuário' }: HeaderProps) {
   const navigate = useNavigate();
   const { logout } = useAuth();
@@ -28,12 +20,10 @@ export function Header({ userName = 'Usuário' }: HeaderProps) {
     <header className="border-b bg-background sticky top-0 z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
-          {/* Logo */}
           <div className="flex items-center gap-2">
             <span className="font-semibold text-lg">teddy open finance</span>
           </div>
 
-          {/* Menu */}
           <nav className="flex gap-6 items-center">
             <Link
               to={ROUTES.CLIENTS}
@@ -57,7 +47,6 @@ export function Header({ userName = 'Usuário' }: HeaderProps) {
             </Button>
           </nav>
 
-          {/* Saudação */}
           <div className="text-sm">
             Olá, <span className="font-bold">{userName}</span>!
           </div>

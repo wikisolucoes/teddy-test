@@ -1,8 +1,3 @@
-/**
- * ClientFormDialog Component - Modal reutilizável para criar/editar cliente
- * Seguindo design-prompt.md
- */
-
 import {
   Dialog,
   DialogContent,
@@ -25,9 +20,6 @@ interface ClientFormDialogProps {
   isSubmitting?: boolean;
 }
 
-/**
- * Modal para criar ou editar cliente
- */
 export function ClientFormDialog({
   open,
   onOpenChange,

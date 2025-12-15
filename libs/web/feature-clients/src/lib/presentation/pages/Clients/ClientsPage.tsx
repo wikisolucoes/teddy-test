@@ -1,8 +1,3 @@
-/**
- * ClientsPage - Tela principal de listagem de clientes
- * Seguindo design-prompt.md: Grid de cards com modais para CRUD
- */
-
 import { useState } from 'react';
 import {
   Button,
@@ -34,9 +29,6 @@ import type {
   UpdateClientDto,
 } from '../../../application/dtos/client.dto';
 
-/**
- * Página de listagem de clientes com CRUD via modais
- */
 export function ClientsPage() {
   const { toast } = useToast();
   const {
@@ -56,8 +48,6 @@ export function ClientsPage() {
   } = useClients();
 
   const { addClient, removeClient, isSelected } = useSelectedClients();
-
-  // Estados dos modais
   const [formDialogOpen, setFormDialogOpen] = useState(false);
   const [formMode, setFormMode] = useState<'create' | 'edit'>('create');
   const [editingClient, setEditingClient] = useState<ClientResponseDto | undefined>();
@@ -65,7 +55,6 @@ export function ClientsPage() {
   const [deletingClient, setDeletingClient] = useState<ClientResponseDto | undefined>();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handlers
   const handleCreate = () => {
     setFormMode('create');
     setEditingClient(undefined);
@@ -133,17 +122,14 @@ export function ClientsPage() {
     }
   };
 
-  // Renderização de paginação com ellipsis
   const renderPagination = () => {
     const pages: (number | 'ellipsis')[] = [];
     
     if (totalPages <= 7) {
-      // Mostra todas as páginas
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      // Lógica com ellipsis: 1 … 3 [4] 5 … 12
       pages.push(1);
       
       if (page > 3) {
@@ -164,7 +150,6 @@ export function ClientsPage() {
     return pages;
   };
 
-  // Estado de erro
   if (error && !loading) {
     return (
       <div className="min-h-screen bg-muted/30">
@@ -187,7 +172,6 @@ export function ClientsPage() {
       <Header />
 
       <div className="container mx-auto px-4 py-6">
-        {/* Cabeçalho da listagem */}
         <div className="flex justify-between items-center mb-6">
           <p className="text-sm font-medium">
             {total} clientes encontrados:

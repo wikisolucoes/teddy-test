@@ -1,18 +1,9 @@
-/**
- * ClientsSelectedPage - Tela de clientes selecionados
- * Permite visualizar e remover clientes da seleção
- */
-
 import { Button, useToast } from '@teddy-monorepo/web/shared';
 import { Header } from '../../components/layout/Header';
 import { ClientCard } from '../../components/cards/ClientCard';
 import { useSelectedClients } from '../../hooks/useSelectedClients';
 import { Trash2 } from 'lucide-react';
 
-/**
- * Página de clientes selecionados
- * Mostra clientes salvos no localStorage com opção de remover
- */
 export function ClientsSelectedPage() {
   const { toast } = useToast();
   const { selectedClients, removeClient, clearAll, isSelected } = useSelectedClients();
@@ -32,7 +23,6 @@ export function ClientsSelectedPage() {
       <Header />
 
       <div className="container mx-auto px-4 py-6">
-        {/* Cabeçalho */}
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-2xl font-bold">Clientes selecionados</h1>
@@ -54,7 +44,6 @@ export function ClientsSelectedPage() {
           )}
         </div>
 
-        {/* Grid de clientes selecionados */}
         {selectedClients.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-muted-foreground">Nenhum cliente selecionado</p>

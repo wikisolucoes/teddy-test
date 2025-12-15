@@ -1,8 +1,3 @@
-/**
- * useClients Hook - Hook customizado para gerenciar estado de clientes
- * Inclui listagem, paginação e operações CRUD
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { clientService } from '../../application/services/client.service';
 import type {
@@ -30,9 +25,6 @@ interface UseClientsReturn extends UseClientsState {
   refetch: () => Promise<void>;
 }
 
-/**
- * Hook para gerenciar listagem e operações de clientes
- */
 export function useClients(initialLimit = 16): UseClientsReturn {
   const [state, setState] = useState<UseClientsState>({
     clients: [],
@@ -44,9 +36,6 @@ export function useClients(initialLimit = 16): UseClientsReturn {
     total: 0,
   });
 
-  /**
-   * Busca clientes da API
-   */
   const fetchClients = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
@@ -74,40 +63,28 @@ export function useClients(initialLimit = 16): UseClientsReturn {
     }
   }, [state.page, state.limit]);
 
-  /**
-   * Carrega clientes quando page ou limit mudam
-   */
   useEffect(() => {
     fetchClients();
   }, [fetchClients]);
 
-  /**
-   * Cria um novo cliente
-   */
   const createClient = async (data: CreateClientDto): Promise<ClientResponseDto> => {
     const client = await clientService.createClient(data);
-    await fetchClients(); // Recarrega a lista
+    await fetchClients();
     return client;
   };
 
-  /**
-   * Atualiza um cliente existente
-   */
   const updateClient = async (
     id: string,
     data: UpdateClientDto
   ): Promise<ClientResponseDto> => {
     const client = await clientService.updateClient(id, data);
-    await fetchClients(); // Recarrega a lista
+    await fetchClients();
     return client;
   };
 
-  /**
-   * Deleta um cliente
-   */
   const deleteClient = async (id: string): Promise<void> => {
     await clientService.deleteClient(id);
-    await fetchClients(); // Recarrega a lista
+    await fetchClients();
   };
 
   return {

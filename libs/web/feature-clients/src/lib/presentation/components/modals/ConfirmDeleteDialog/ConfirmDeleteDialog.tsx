@@ -1,8 +1,3 @@
-/**
- * ConfirmDeleteDialog Component - Modal de confirmação de exclusão
- * Seguindo design-prompt.md
- */
-
 import {
   Dialog,
   DialogContent,
@@ -21,9 +16,6 @@ interface ConfirmDeleteDialogProps {
   isDeleting?: boolean;
 }
 
-/**
- * Modal de confirmação para exclusão de cliente
- */
 export function ConfirmDeleteDialog({
   open,
   onOpenChange,
