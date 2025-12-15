@@ -8,7 +8,7 @@ RUN npm install -g pnpm@10
 
 # Copy workspace configuration
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .pnpmfile.cjs ./
-COPY nx.json tsconfig.base.json ./
+COPY nx.json tsconfig.base.json tsconfig.json ./
 
 # Copy source code
 COPY apps/web ./apps/web
@@ -16,6 +16,9 @@ COPY libs/web ./libs/web
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile
+
+# Sync Nx workspace
+RUN pnpm nx sync
 
 # Build the application
 RUN pnpm nx build @teddy-monorepo/web --configuration=production
