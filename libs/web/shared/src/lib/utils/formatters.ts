@@ -1,9 +1,4 @@
 /**
- * Formatters - Funções utilitárias para formatação de dados
- * Seguindo padrões brasileiros (R$, datas, etc.)
- */
-
-/**
  * Formata um valor numérico para moeda brasileira (R$ 0.000,00)
  * @param value - Valor numérico a ser formatado
  * @returns String formatada como moeda brasileira
@@ -25,9 +20,7 @@ export function formatCurrency(value: number): string {
  * @example unformatCurrency("R$ 120.000,00") // 120000
  */
 export function unformatCurrency(value: string): number {
-  // Remove tudo exceto números, vírgula e ponto
   const cleanValue = value.replace(/[^\d,]/g, '');
-  // Substitui vírgula por ponto para conversão
   const normalizedValue = cleanValue.replace(',', '.');
   return parseFloat(normalizedValue) || 0;
 }
@@ -39,16 +32,12 @@ export function unformatCurrency(value: string): number {
  * @returns String formatada
  */
 export function maskCurrency(value: string): string {
-  // Remove tudo exceto dígitos
   const digits = value.replace(/\D/g, '');
   
-  // Converte para número e divide por 100 (para ter centavos)
   const amount = parseInt(digits, 10) / 100;
   
-  // Se não houver dígitos, retorna vazio
   if (isNaN(amount)) return '';
   
-  // Formata usando a função de formatação
   return formatCurrency(amount);
 }
 
@@ -115,4 +104,66 @@ export function formatRelativeDate(date: string | Date): string {
  */
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat('pt-BR').format(value);
+}
+
+/**
+ * Formata uma string de CPF durante a digitação
+ * Aplica a máscara XXX.XXX.XXX-XX em tempo real
+ * @param value - Valor digitado pelo usuário
+ * @returns String formatada
+ * @example maskCPF("12345678901") // "123.456.789-01"
+ */
+export function maskCPF(value: string): string {
+  const digits = value.replace(/\D/g, '');
+  
+  const limited = digits.slice(0, 11);
+  
+  return limited
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+
+/**
+ * Formata uma string de telefone durante a digitação
+ * Aplica a máscara (XX) XXXXX-XXXX ou (XX) XXXX-XXXX em tempo real
+ * @param value - Valor digitado pelo usuário
+ * @returns String formatada
+ * @example maskPhone("11987654321") // "(11) 98765-4321"
+ * @example maskPhone("1132123456") // "(11) 3212-3456"
+ */
+export function maskPhone(value: string): string {
+  const digits = value.replace(/\D/g, '');
+  
+  const limited = digits.slice(0, 11);
+  
+  if (limited.length <= 10) {
+    return limited
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{4})(\d)/, '$1-$2');
+  } else {
+    return limited
+      .replace(/(\d{2})(\d)/, '($1) $2')
+      .replace(/(\d{5})(\d)/, '$1-$2');
+  }
+}
+
+/**
+ * Remove a máscara de CPF
+ * @param value - String com CPF formatado
+ * @returns Apenas os dígitos
+ * @example unformatCPF("123.456.789-01") // "12345678901"
+ */
+export function unformatCPF(value: string): string {
+  return value.replace(/\D/g, '');
+}
+
+/**
+ * Remove a máscara de telefone
+ * @param value - String com telefone formatado
+ * @returns Apenas os dígitos
+ * @example unformatPhone("(11) 98765-4321") // "11987654321"
+ */
+export function unformatPhone(value: string): string {
+  return value.replace(/\D/g, '');
 }
