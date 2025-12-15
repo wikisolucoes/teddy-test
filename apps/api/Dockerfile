@@ -38,11 +38,13 @@ RUN addgroup --system api && \
 # Copy built application and dependencies
 COPY --from=builder /app/apps/api/dist ./
 COPY --from=builder /app/node_modules ./node_modules
+COPY apps/api/docker-entrypoint.sh ./docker-entrypoint.sh
 
-RUN chown -R api:api .
+RUN chmod +x ./docker-entrypoint.sh && \
+    chown -R api:api .
 
 USER api
 
 EXPOSE 3000
 
-CMD ["node", "main.js"]
+CMD ["./docker-entrypoint.sh"]
