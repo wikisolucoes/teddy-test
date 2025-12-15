@@ -81,15 +81,15 @@ export class HealthController {
   async check(): Promise<HealthCheckResult> {
     return this.health.check([
       // Database health checks
-      () => this.db.pingCheck('database-write', { connection: 'write' }),
-      () => this.db.pingCheck('database-read', { connection: 'read' }),
+      async () => this.db.pingCheck('database-write', { connection: 'write' }),
+      async () => this.db.pingCheck('database-read', { connection: 'read' }),
       
       // Memory health checks
-      () => this.memory.checkHeap('memory-heap', this.healthConfig.memoryThresholdBytes),
-      () => this.memory.checkRSS('memory-rss', this.healthConfig.memoryThresholdBytes),
+      async () => this.memory.checkHeap('memory-heap', this.healthConfig.memoryThresholdBytes),
+      async () => this.memory.checkRSS('memory-rss', this.healthConfig.memoryThresholdBytes),
       
       // Disk health check
-      () => this.disk.checkStorage('storage', { 
+      async () => this.disk.checkStorage('storage', { 
         path: '/', 
         thresholdPercent: this.healthConfig.diskThresholdPercent 
       }),
