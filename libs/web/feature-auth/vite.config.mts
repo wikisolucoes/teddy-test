@@ -14,6 +14,11 @@ export default defineConfig(() => ({
       tsconfigPath: path.join(import.meta.dirname, 'tsconfig.lib.json'),
     }),
   ],
+  resolve: {
+    alias: {
+      '@teddy-monorepo/web/feature-auth': path.resolve(import.meta.dirname, './src/lib'),
+    },
+  },
   // Uncomment this if you are using workers.
   // worker: {
   //  plugins: [],
