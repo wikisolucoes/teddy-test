@@ -8,14 +8,16 @@ import type { ClientEntity } from '../entities/client.entity';
 
 export interface CreateClientData {
   name: string;
-  salary: number;
-  companyValuation: number;
+  email: string;
+  cpf: string;
+  phone: string;
 }
 
 export interface UpdateClientData {
   name?: string;
-  salary?: number;
-  companyValuation?: number;
+  email?: string;
+  cpf?: string;
+  phone?: string;
 }
 
 /**
