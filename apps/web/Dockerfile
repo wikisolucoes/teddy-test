@@ -7,7 +7,7 @@ WORKDIR /app
 RUN npm install -g pnpm@10
 
 # Copy workspace configuration
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .pnpmfile.cjs ./
 COPY nx.json tsconfig.base.json ./
 
 # Copy source code
