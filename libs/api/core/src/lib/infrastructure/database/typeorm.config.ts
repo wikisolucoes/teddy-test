@@ -12,6 +12,7 @@ const baseConfig = {
     SeedAdminUser1734000000001,
   ],
   synchronize: false,
+  migrationsRun: true, // Run migrations automatically on startup
   logging: process.env.NODE_ENV === 'development',
   extra: {
     query_timeout: 30000,
