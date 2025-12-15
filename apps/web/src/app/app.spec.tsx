@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import App from './app';
@@ -13,14 +13,14 @@ describe('App', () => {
     expect(baseElement).toBeTruthy();
   });
 
-  it('should have a greeting as the title', () => {
-    const { getAllByText } = render(
+  it('should render loading or login when not authenticated', () => {
+    render(
       <BrowserRouter>
         <App />
       </BrowserRouter>
     );
-    expect(
-      getAllByText(new RegExp('Welcome @teddy-monorepo/web', 'gi')).length > 0
-    ).toBeTruthy();
+    // Verifica se o app renderiza (loading ou login)
+    const loadingText = screen.getByText(/Carregando.../i);
+    expect(loadingText).toBeTruthy();
   });
 });
