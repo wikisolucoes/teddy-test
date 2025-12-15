@@ -1,8 +1,3 @@
-/**
- * Client Service - Camada de aplicação
- * Orquestra as operações de clientes e pode aplicar regras de negócio
- */
-
 import { clientRepository } from '../../infrastructure/api/repositories/client.repository';
 import type { PaginatedResponse } from '@teddy-monorepo/web/shared';
 import type { ClientEntity } from '../../domain/entities/client.entity';
@@ -12,13 +7,7 @@ import type {
   ClientResponseDto,
 } from '../dtos/client.dto';
 
-/**
- * Serviço responsável por operações de clientes
- */
 export class ClientService {
-  /**
-   * Busca clientes com paginação
-   */
   async getClients(
     page = 1,
     limit = 16
@@ -31,9 +20,6 @@ export class ClientService {
     }
   }
 
-  /**
-   * Busca um cliente por ID
-   */
   async getClientById(id: string): Promise<ClientResponseDto> {
     try {
       return await clientRepository.findById(id);
@@ -43,9 +29,6 @@ export class ClientService {
     }
   }
 
-  /**
-   * Cria um novo cliente
-   */
   async createClient(data: CreateClientDto): Promise<ClientResponseDto> {
     try {
       return await clientRepository.create(data);
@@ -55,9 +38,6 @@ export class ClientService {
     }
   }
 
-  /**
-   * Atualiza um cliente existente
-   */
   async updateClient(
     id: string,
     data: UpdateClientDto
@@ -70,9 +50,6 @@ export class ClientService {
     }
   }
 
-  /**
-   * Deleta um cliente
-   */
   async deleteClient(id: string): Promise<void> {
     try {
       await clientRepository.delete(id);
@@ -83,5 +60,4 @@ export class ClientService {
   }
 }
 
-// Exporta uma instância singleton do serviço
 export const clientService = new ClientService();
