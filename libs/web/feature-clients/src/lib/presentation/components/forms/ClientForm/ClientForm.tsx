@@ -1,9 +1,3 @@
-/**
- * ClientForm Component - Formulário de cliente
- * Usa react-hook-form + Zod para validação
- * Inclui máscaras de moeda
- */
-
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -13,7 +7,7 @@ import {
   clientFormSchema,
   type ClientFormData,
 } from '@teddy-monorepo/web/shared';
-import { maskCurrency, unformatCurrency } from '@teddy-monorepo/web/shared';
+import { maskCPF, maskPhone } from '@teddy-monorepo/web/shared';
 import { useState } from 'react';
 import type {
   ClientResponseDto,
@@ -29,9 +23,6 @@ interface ClientFormProps {
   isSubmitting?: boolean;
 }
 
-/**
- * Formulário de cliente com validação e máscaras
- */
 export function ClientForm({
   initialData,
   onSubmit,
@@ -39,11 +30,11 @@ export function ClientForm({
   submitLabel = 'Salvar',
   isSubmitting = false,
 }: ClientFormProps) {
-  const [salaryDisplay, setSalaryDisplay] = useState(
-    initialData ? maskCurrency(initialData.salary.toString()) : ''
+  const [cpfDisplay, setCpfDisplay] = useState(
+    initialData ? maskCPF(initialData.cpf) : ''
   );
-  const [companyDisplay, setCompanyDisplay] = useState(
-    initialData ? maskCurrency(initialData.companyValuation.toString()) : ''
+  const [phoneDisplay, setPhoneDisplay] = useState(
+    initialData ? maskPhone(initialData.phone) : ''
   );
 
   const {
@@ -56,22 +47,23 @@ export function ClientForm({
     defaultValues: initialData
       ? {
           name: initialData.name,
-          salary: initialData.salary,
-          companyValuation: initialData.companyValuation,
+          email: initialData.email,
+          cpf: initialData.cpf,
+          phone: initialData.phone,
         }
       : undefined,
   });
 
-  const handleSalaryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = maskCurrency(e.target.value);
-    setSalaryDisplay(formatted);
-    setValue('salary', unformatCurrency(formatted));
+  const handleCpfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = maskCPF(e.target.value);
+    setCpfDisplay(formatted);
+    setValue('cpf', formatted);
   };
 
-  const handleCompanyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formatted = maskCurrency(e.target.value);
-    setCompanyDisplay(formatted);
-    setValue('companyValuation', unformatCurrency(formatted));
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formatted = maskPhone(e.target.value);
+    setPhoneDisplay(formatted);
+    setValue('phone', formatted);
   };
 
   const onFormSubmit = async (data: ClientFormData) => {
@@ -80,7 +72,6 @@ export function ClientForm({
 
   return (
     <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-      {/* Nome */}
       <div className="space-y-2">
         <Label htmlFor="name">Nome</Label>
         <Input
@@ -94,39 +85,48 @@ export function ClientForm({
         )}
       </div>
 
-      {/* Salário */}
       <div className="space-y-2">
-        <Label htmlFor="salary">Salário</Label>
+        <Label htmlFor="email">Email</Label>
         <Input
-          id="salary"
-          placeholder="Digite o salário"
-          value={salaryDisplay}
-          onChange={handleSalaryChange}
+          id="email"
+          type="email"
+          placeholder="Digite o email"
+          {...register('email')}
           disabled={isSubmitting}
         />
-        {errors.salary && (
-          <p className="text-sm text-red-500">{errors.salary.message}</p>
+        {errors.email && (
+          <p className="text-sm text-red-500">{errors.email.message}</p>
         )}
       </div>
 
-      {/* Valor da empresa */}
       <div className="space-y-2">
-        <Label htmlFor="companyValuation">Valor da empresa</Label>
+        <Label htmlFor="cpf">CPF</Label>
         <Input
-          id="companyValuation"
-          placeholder="Digite o valor da empresa"
-          value={companyDisplay}
-          onChange={handleCompanyChange}
+          id="cpf"
+          placeholder="XXX.XXX.XXX-XX"
+          value={cpfDisplay}
+          onChange={handleCpfChange}
           disabled={isSubmitting}
         />
-        {errors.companyValuation && (
-          <p className="text-sm text-red-500">
-            {errors.companyValuation.message}
-          </p>
+        {errors.cpf && (
+          <p className="text-sm text-red-500">{errors.cpf.message}</p>
         )}
       </div>
 
-      {/* Botões */}
+      <div className="space-y-2">
+        <Label htmlFor="phone">Telefone</Label>
+        <Input
+          id="phone"
+          placeholder="(XX) XXXXX-XXXX"
+          value={phoneDisplay}
+          onChange={handlePhoneChange}
+          disabled={isSubmitting}
+        />
+        {errors.phone && (
+          <p className="text-sm text-red-500">{errors.phone.message}</p>
+        )}
+      </div>
+
       <div className="flex gap-2 pt-2">
         <Button
           type="submit"

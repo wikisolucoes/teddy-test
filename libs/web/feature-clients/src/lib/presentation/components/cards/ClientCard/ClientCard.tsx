@@ -1,10 +1,5 @@
-/**
- * ClientCard Component - Card individual de cliente
- * Seguindo design-prompt.md: Nome, Salário, Empresa e Ações
- */
-
 import { Card, CardContent, Button } from '@teddy-monorepo/web/shared';
-import { formatCurrency } from '@teddy-monorepo/web/shared';
+import { maskCPF, maskPhone } from '@teddy-monorepo/web/shared';
 import { Plus, Pencil, Trash, Minus } from 'lucide-react';
 import type { ClientResponseDto } from '../../../application/dtos/client.dto';
 
@@ -17,9 +12,6 @@ interface ClientCardProps {
   variant?: 'normal' | 'selected';
 }
 
-/**
- * Card de cliente com informações e ações
- */
 export function ClientCard({
   client,
   onEdit,
@@ -32,20 +24,20 @@ export function ClientCard({
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
         <div className="space-y-3">
-          {/* Nome */}
           <h3 className="font-semibold text-lg">{client.name}</h3>
 
-          {/* Informações */}
           <div className="space-y-1">
             <p className="text-sm text-muted-foreground">
-              Salário: {formatCurrency(client.salary)}
+              Email: {client.email}
             </p>
             <p className="text-sm text-muted-foreground">
-              Empresa: {formatCurrency(client.companyValuation)}
+              CPF: {maskCPF(client.cpf)}
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Telefone: {maskPhone(client.phone)}
             </p>
           </div>
 
-          {/* Ações */}
           <div className="flex gap-2 pt-2">
             {variant === 'normal' ? (
               <>
