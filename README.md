@@ -1,90 +1,194 @@
-# TeddyMonorepo
+# Teddy Open Finance - Client Management System
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+Sistema full-stack de gerenciamento de clientes construído com NestJS e React, organizado em monorepo Nx.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Visão Geral
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+MVP completo de gerenciamento de clientes incluindo autenticação JWT, CRUD com soft delete, dashboard administrativo com estatísticas e gráficos, contador de acessos e logs estruturados. O projeto segue princípios de Clean Architecture, DDD e CQRS.
 
-## Finish your CI setup
+## Arquitetura
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/wcnYkIfAjP)
-
-
-## Generate a library
-
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
-
-## Run tasks
-
-To build the library use:
-
-```sh
-npx nx build pkg1
-```
-
-To run any task with Nx use:
-
-```sh
-npx nx <target> <project-name>
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Versioning and releasing
-
-To version and release the library use
+### Ambiente Local
 
 ```
-npx nx release
+Browser (localhost:5173)
+    ↓
+Frontend (React + Vite)
+    ↓ HTTP/REST
+Backend (NestJS:3000)
+    ├── API Layer (/auth, /clients, /dashboard, /health)
+    ├── Application (CQRS: Commands + Queries)
+    └── Domain (Entities, Services, Repositories)
+    ↓
+PostgreSQL (localhost:5432)
 ```
 
-Pass `--dry-run` to see what would happen without actually releasing the library.
+### Estrutura do Monorepo
 
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
+```
+teddy-monorepo/
+├── apps/
+│   ├── api/                # NestJS Backend
+│   └── web/                # React Frontend
+├── libs/
+│   ├── api/
+│   │   ├── core/
+│   │   ├── feature-auth/
+│   │   ├── feature-clients/
+│   │   ├── feature-dashboard/
+│   │   └── feature-health/
+│   └── web/
+│       ├── core/
+│       ├── shared/
+│       ├── feature-auth/
+│       ├── feature-clients/
+│       └── feature-dashboard/
+└── .github/workflows/      # CI/CD
 ```
 
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
+## Stack Tecnológico
 
-```sh
-npx nx sync:check
+**Backend:** NestJS, TypeScript, TypeORM, PostgreSQL, JWT, Swagger, Winston  
+**Frontend:** React 19, Vite, TypeScript, TailwindCSS, shadcn/ui, React Hook Form, Zod, Recharts  
+**DevOps:** Nx, Docker, GitHub Actions, ESLint, Prettier
+
+## Como Executar
+
+Requisitos: Node.js 20+, pnpm 9+, Docker
+
+```bash
+# Instalar dependências
+pnpm install
+
+# Iniciar backend (API + PostgreSQL)
+cd apps/api && docker-compose up -d
+
+# Iniciar frontend
+pnpm nx serve @teddy-monorepo/web
 ```
 
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
+**URLs:**
+- Frontend: http://localhost:5173
+- API: http://localhost:3000
+- Swagger: http://localhost:3000/docs
+- Health: http://localhost:3000/api/health
+- Metrics: http://localhost:3000/api/metrics
 
+**Credenciais padrão:** admin@teddy.com / admin123
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Estrutura do Projeto
 
-## Install Nx Console
+Clean Architecture com DDD:
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+```
+libs/api/feature-clients/
+├── domain/          # Entidades e lógica de negócio
+├── application/     # Casos de uso (commands/queries CQRS)
+├── infrastructure/  # Implementações (repositories, database)
+└── presentation/    # Controllers HTTP
+```
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Decisões Arquiteturais
 
-## Useful links
+### CQRS
 
-Learn more:
+Separação entre operações de leitura e escrita para otimizar performance e escalabilidade. Queries são otimizadas para consumo de UI enquanto Commands focam em validação e mudança de estado. Facilita uso de read replicas no futuro e possibilita event sourcing.
 
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Monorepo Nx
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Compartilhamento de código entre frontend e backend, pipelines CI/CD otimizados (affected builds), padrões consistentes e mudanças atômicas cross-stack.
+
+### Feature Modules
+
+Cada feature é auto-contida com domain, application, infrastructure e presentation próprios. Facilita trabalho em paralelo, adição/remoção de features e migração para microserviços se necessário.
+
+## Proposta de Arquitetura AWS
+
+### Diagrama de Infraestrutura
+
+```
+Internet
+  ↓
+Route 53 (DNS)
+  ↓
+CloudFront (CDN global, edge caching, DDoS protection)
+  ↓
+┌─────────────┬──────────────┐
+S3 (Frontend) ALB (SSL/TLS)
+              ↓
+          VPC (10.0.0.0/16)
+          ├── Public Subnets (NAT Gateway, ALB)
+          └── Private Subnets
+              ├── ECS Fargate (API tasks, auto-scale 2-10)
+              ├── RDS PostgreSQL (Multi-AZ, read replicas)
+              └── ElastiCache Redis (sessions, cache)
+
+Observability: CloudWatch + X-Ray + Secrets Manager
+Security: WAF + Shield
+```
+
+### Componentes
+
+**Frontend (S3 + CloudFront):**  
+React build estático servido via S3 com CloudFront como CDN global. HTTPS via ACM, caching em edge locations para baixa latência.
+
+**API (ALB + ECS Fargate):**  
+Application Load Balancer com SSL termination e health checks. ECS Fargate para orquestração serverless de containers com auto-scaling (2-10 tasks) baseado em CPU/memória. Blue-green deployments via GitHub Actions → ECR → ECS.
+
+**Database (RDS PostgreSQL):**  
+Multi-AZ deployment com failover automático. Read replicas para otimização de queries. Backups automatizados e point-in-time recovery.
+
+**Cache (ElastiCache Redis):**  
+Sessões, cache de queries, rate limiting. Cluster mode para sharding em alta escala.
+
+**Segurança:**
+- VPC com subnets públicas (ALB, NAT) e privadas (ECS, RDS)
+- Security groups restritivos por camada
+- Secrets Manager para credenciais
+- WAF para proteção contra SQL injection, XSS e rate limiting
+
+**Observabilidade:**
+- CloudWatch: métricas (request count, latency p50/p95/p99, error rate), logs estruturados JSON, alarms
+- X-Ray: distributed tracing para identificar bottlenecks
+- Prometheus metrics endpoint (/api/metrics)
+
+### Escalabilidade
+
+**Horizontal:** ECS auto-scaling, read replicas RDS, ElastiCache sharding  
+**Vertical:** Upgrade de instância RDS durante off-peak, ajuste de CPU/memória ECS  
+**Cache:** Dashboard stats (5min TTL), client lists (1min TTL), sessões Redis
+
+**Triggers:**
+- Scale up: CPU > 70% ou latency > 1s
+- Scale down: CPU < 30% por 10min
+
+**Custo estimado:** ~$130/mês (1k users/dia) a ~$500/mês (10k users/dia)
+
+## Observabilidade
+
+Logs estruturados em JSON (Winston), health check em `/api/health`, métricas Prometheus em `/api/metrics`. Implementado para debugging rápido, monitoramento proativo, otimização de performance e compliance com auditoria.
+
+## CI/CD
+
+GitHub Actions com pipelines separados para API e Web. Nx affected builds (compila apenas projetos alterados), testes em paralelo, build Docker, lint e format check. Artefatos salvos para debugging.
+
+## Testes
+
+```bash
+pnpm nx run-many -t test --all          # Todos os testes
+pnpm nx test @teddy-monorepo/api        # Backend
+pnpm nx test @teddy-monorepo/web        # Frontend
+pnpm nx e2e @teddy-monorepo/web-e2e     # E2E (Playwright)
+```
+
+Backend: Jest (unit, integration, E2E)  
+Frontend: Jest + React Testing Library (components, hooks)  
+E2E: Playwright (fluxos críticos)
+
+## Documentação
+
+Consulte os READMEs específicos de cada aplicação:
+
+- [Backend API](/apps/api/README.md) - Instruções para rodar e documentação dos endpoints
+- [Frontend Web](/apps/web/README.md) - Instruções para rodar e estrutura do projeto
+- Swagger: Disponível em `/docs` quando a API estiver rodando
