@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const GetLatestClientsSchema = z.object({
-  limit: z
+  limit: z.coerce
     .number()
     .int('Limit must be an integer')
     .min(1, 'Limit must be at least 1')

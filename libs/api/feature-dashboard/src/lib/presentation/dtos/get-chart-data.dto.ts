@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const GetChartDataSchema = z.object({
-  months: z
+  months: z.coerce
     .number()
     .int('Months must be an integer')
     .min(1, 'Months must be at least 1')
