@@ -10,6 +10,7 @@ on:
       - 'libs/web/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'nx.json'
   pull_request:
     branches:
       - main
@@ -19,6 +20,7 @@ on:
       - 'libs/web/**'
       - 'package.json'
       - 'pnpm-lock.yaml'
+      - 'nx.json'
 
 permissions:
   contents: read
