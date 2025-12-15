@@ -65,16 +65,16 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Lint API
-        run: pnpm nx lint api
+        run: pnpm nx lint @teddy-monorepo/api
 
       - name: Lint API Core
         run: pnpm nx lint @teddy-monorepo/api/core
 
       - name: Lint API Feature Auth
-        run: pnpm nx lint feature-auth
+        run: pnpm nx lint @teddy-monorepo/api/feature-auth
 
       - name: Lint API Feature Clients
-        run: pnpm nx lint feature-clients
+        run: pnpm nx lint @teddy-monorepo/api/feature-clients
 
       - name: Test API
         env:
@@ -92,10 +92,10 @@ jobs:
           JWT_EXPIRES_IN: ${{ secrets.JWT_EXPIRES_IN || '24h' }}
           NODE_ENV: test
         run: |
-          pnpm nx test api --coverage --ci
+          pnpm nx test @teddy-monorepo/api --coverage --ci
           pnpm nx test @teddy-monorepo/api/core --coverage --ci
-          pnpm nx test feature-auth --coverage --ci
-          pnpm nx test feature-clients --coverage --ci
+          pnpm nx test @teddy-monorepo/api/feature-auth --coverage --ci
+          pnpm nx test @teddy-monorepo/api/feature-clients --coverage --ci
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v4
@@ -128,7 +128,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build API
-        run: pnpm nx build api --prod
+        run: pnpm nx build @teddy-monorepo/api --prod
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
