@@ -4,7 +4,7 @@ import type {
   LoginRequest,
   LoginResponse,
   ValidateTokenResponse,
-} from '../../domain/repositories/auth.repository.interface';
+} from '../../../domain/repositories/auth.repository.interface';
 
 export class AuthRepository implements IAuthRepository {
   async login(request: LoginRequest): Promise<LoginResponse> {
