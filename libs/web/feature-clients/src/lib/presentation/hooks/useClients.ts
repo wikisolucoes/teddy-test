@@ -33,7 +33,7 @@ interface UseClientsReturn extends UseClientsState {
 /**
  * Hook para gerenciar listagem e operações de clientes
  */
-export function useClients(initialLimit: number = 16): UseClientsReturn {
+export function useClients(initialLimit = 16): UseClientsReturn {
   const [state, setState] = useState<UseClientsState>({
     clients: [],
     loading: true,
@@ -85,13 +85,9 @@ export function useClients(initialLimit: number = 16): UseClientsReturn {
    * Cria um novo cliente
    */
   const createClient = async (data: CreateClientDto): Promise<ClientResponseDto> => {
-    try {
-      const client = await clientService.createClient(data);
-      await fetchClients(); // Recarrega a lista
-      return client;
-    } catch (error) {
-      throw error;
-    }
+    const client = await clientService.createClient(data);
+    await fetchClients(); // Recarrega a lista
+    return client;
   };
 
   /**
@@ -101,25 +97,17 @@ export function useClients(initialLimit: number = 16): UseClientsReturn {
     id: string,
     data: UpdateClientDto
   ): Promise<ClientResponseDto> => {
-    try {
-      const client = await clientService.updateClient(id, data);
-      await fetchClients(); // Recarrega a lista
-      return client;
-    } catch (error) {
-      throw error;
-    }
+    const client = await clientService.updateClient(id, data);
+    await fetchClients(); // Recarrega a lista
+    return client;
   };
 
   /**
    * Deleta um cliente
    */
   const deleteClient = async (id: string): Promise<void> => {
-    try {
-      await clientService.deleteClient(id);
-      await fetchClients(); // Recarrega a lista
-    } catch (error) {
-      throw error;
-    }
+    await clientService.deleteClient(id);
+    await fetchClients(); // Recarrega a lista
   };
 
   return {

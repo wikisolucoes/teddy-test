@@ -68,8 +68,8 @@ export function ClientsSelectedPage() {
               <ClientCard
                 key={client.id}
                 client={client}
-                onEdit={() => {}} // Não permite editar direto da página de selecionados
-                onDelete={() => {}} // Não permite deletar direto da página de selecionados
+                onEdit={() => undefined} // Não permite editar direto da página de selecionados
+                onDelete={() => undefined} // Não permite deletar direto da página de selecionados
                 onToggleSelect={handleRemove}
                 isSelected={isSelected(client.id)}
                 variant="selected"
