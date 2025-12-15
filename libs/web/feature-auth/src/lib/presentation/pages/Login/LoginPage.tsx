@@ -11,7 +11,6 @@ export function LoginPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Redirecionar se já estiver autenticado
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
       navigate('/dashboard', { replace: true });

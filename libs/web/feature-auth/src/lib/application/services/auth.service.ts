@@ -8,7 +8,6 @@ export class AuthService {
   async login(request: LoginRequest): Promise<AuthResponse> {
     const response = await this.authRepository.login(request);
     
-    // Armazenar token
     tokenStorage.set(response.access_token);
 
     return {
@@ -30,7 +29,6 @@ export class AuthService {
         name: response.name,
       };
     } catch (error) {
-      // Token inválido ou expirado
       tokenStorage.remove();
       return null;
     }

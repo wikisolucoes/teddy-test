@@ -11,7 +11,6 @@ export const apiClient: AxiosInstance = axios.create({
   },
 });
 
-// Setup interceptors
 setupAuthInterceptor(apiClient);
 setupErrorInterceptor(apiClient);
 
