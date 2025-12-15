@@ -1,23 +1,36 @@
+# Build stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Install pnpm
+RUN npm install -g pnpm@9
+
+# Copy workspace configuration
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY nx.json tsconfig.base.json ./
+
+# Copy source code
+COPY apps/web ./apps/web
+COPY libs/web ./libs/web
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Build the application
+RUN pnpm nx build @teddy-monorepo/web --configuration=production
+
+# Production stage
 FROM nginx:alpine
 
-# Copiar a build já pronta
-COPY apps/web/dist /usr/share/nginx/html
+# Copy built app
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-# Criar configuração do nginx para SPA (React Router)
+# Copy nginx config for SPA routing
 RUN echo 'server { \
     listen 80; \
-    server_name _; \
-    root /usr/share/nginx/html; \
-    index index.html; \
-    \
-    # Servir arquivos estáticos com cache \
-    location /assets { \
-        expires 1y; \
-        add_header Cache-Control "public, immutable"; \
-    } \
-    \
-    # Fallback para index.html para SPA routing \
     location / { \
+        root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
     } \
 }' > /etc/nginx/conf.d/default.conf

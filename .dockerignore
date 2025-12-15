@@ -1,55 +1,46 @@
-# Dependencies (NÃO ignorar node_modules pois precisamos copiá-lo)
-.pnpm-store/
+# Git
+.git
+.gitignore
 
-# Build outputs (exceto apps/api/dist e apps/web/dist que serão usados)
-out-tsc/
-**/out-tsc/
-.nx/
-dist/
+# Node
+.pnpm-store
+.nx
 
-# Dist de libs (não precisamos no Docker)
-libs/**/dist/
-# Mas permitir apps/api/dist e apps/web/dist especificamente
-!apps/api/dist/
-!apps/web/dist/
+# Build outputs (serão criados no container)
+dist
+out-tsc
+**/out-tsc
 
-# Environment files
+# Environment
 .env
 .env.local
 .env.*.local
-**/.env.local
-
-# Git
-.git/
-.gitignore
 
 # IDEs
-.vscode/
-.idea/
-**/.vscode/
-**/.idea/
+.vscode
+.idea
+*.swp
+*.swo
 
 # OS
 .DS_Store
 Thumbs.db
-**/.DS_Store
-
-# Docker
-**/Dockerfile
-**/docker-compose.yml
-**/.dockerignore
 
 # Logs
-logs/
+logs
 *.log
-**/logs/
 
 # Testing
-coverage/
-**/coverage/
-.nyc_output/
+coverage
+.nyc_output
+test-output
+
+# Docker
+docker-compose.yml
+.dockerignore
 
 # Misc
-*.swp
-*.swo
-*~
+*.md
+!README.md
+agent.local
+docs
