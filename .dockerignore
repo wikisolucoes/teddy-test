@@ -1,17 +1,17 @@
 # Dependencies (NÃO ignorar node_modules pois precisamos copiá-lo)
 .pnpm-store/
 
-# Build outputs (exceto apps/api/dist que será usado)
+# Build outputs (exceto apps/api/dist e apps/web/dist que serão usados)
 out-tsc/
 **/out-tsc/
 .nx/
 dist/
 
-# Dist de outras apps/libs (não precisamos no Docker)
-apps/web/dist/
+# Dist de libs (não precisamos no Docker)
 libs/**/dist/
-# Mas permitir apps/api/dist especificamente
+# Mas permitir apps/api/dist e apps/web/dist especificamente
 !apps/api/dist/
+!apps/web/dist/
 
 # Environment files
 .env
