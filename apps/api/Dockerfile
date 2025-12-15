@@ -8,8 +8,8 @@ WORKDIR /app
 RUN addgroup --system api && \
     adduser --system -G api api
 
-# Copiar apenas o dist já buildado e package.json
-COPY apps/api/dist ./
+# Copiar apenas o dist já buildado e node_modules
+COPY dist/apps/api ./
 COPY node_modules ./node_modules
 RUN chown -R api:api .
 
