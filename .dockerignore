@@ -5,10 +5,13 @@
 out-tsc/
 **/out-tsc/
 .nx/
+dist/
 
 # Dist de outras apps/libs (não precisamos no Docker)
 apps/web/dist/
 libs/**/dist/
+# Mas permitir apps/api/dist especificamente
+!apps/api/dist/
 
 # Environment files
 .env

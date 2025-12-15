@@ -9,7 +9,7 @@ RUN addgroup --system api && \
     adduser --system -G api api
 
 # Copiar apenas o dist já buildado e node_modules
-COPY dist/apps/api ./
+COPY apps/api/dist ./
 COPY node_modules ./node_modules
 RUN chown -R api:api .
 
