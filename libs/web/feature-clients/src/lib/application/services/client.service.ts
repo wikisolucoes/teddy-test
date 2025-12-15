@@ -20,8 +20,8 @@ export class ClientService {
    * Busca clientes com paginação
    */
   async getClients(
-    page: number = 1,
-    limit: number = 16
+    page = 1,
+    limit = 16
   ): Promise<PaginatedResponse<ClientEntity>> {
     try {
       return await clientRepository.findAll(page, limit);

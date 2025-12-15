@@ -29,7 +29,7 @@ export class DashboardService {
   /**
    * Busca os últimos clientes cadastrados
    */
-  async getLatestClients(limit: number = 5): Promise<LatestClientDto[]> {
+  async getLatestClients(limit = 5): Promise<LatestClientDto[]> {
     try {
       return await dashboardRepository.getLatestClients(limit);
     } catch (error) {

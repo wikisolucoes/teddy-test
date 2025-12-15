@@ -40,7 +40,7 @@ export function unformatCurrency(value: string): number {
  */
 export function maskCurrency(value: string): string {
   // Remove tudo exceto dígitos
-  let digits = value.replace(/\D/g, '');
+  const digits = value.replace(/\D/g, '');
   
   // Converte para número e divide por 100 (para ter centavos)
   const amount = parseInt(digits, 10) / 100;

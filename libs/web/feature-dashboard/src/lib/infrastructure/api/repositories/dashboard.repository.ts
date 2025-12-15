@@ -29,7 +29,7 @@ export class DashboardRepository {
    * Busca os últimos clientes cadastrados
    * @param limit - Número máximo de clientes a retornar (padrão: 5)
    */
-  async getLatestClients(limit: number = 5): Promise<LatestClientDto[]> {
+  async getLatestClients(limit = 5): Promise<LatestClientDto[]> {
     const response = await apiClient.get<LatestClientDto[]>(
       API_ENDPOINTS.DASHBOARD.LATEST,
       { params: { limit } }

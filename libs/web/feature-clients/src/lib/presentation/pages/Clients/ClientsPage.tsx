@@ -99,8 +99,8 @@ export function ClientsPage() {
       if (formMode === 'create') {
         await createClient(data as CreateClientDto);
         toast({ title: 'Cliente criado com sucesso!' });
-      } else {
-        await updateClient(editingClient!.id, data);
+      } else if (editingClient) {
+        await updateClient(editingClient.id, data);
         toast({ title: 'Cliente atualizado com sucesso!' });
       }
     } catch (error) {
