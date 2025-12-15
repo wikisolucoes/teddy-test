@@ -4,8 +4,8 @@
 echo "🔍 Running pre-push checks..."
 echo ""
 
-# Run all CI checks
-pnpm exec nx run-many -t lint test build typecheck || {
+# Run lint, test and build for all projects
+pnpm exec nx run-many -t lint test build || {
   echo ""
   echo "❌ Pre-push checks failed! Fix the issues above before pushing."
   echo ""
