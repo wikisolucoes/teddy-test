@@ -55,10 +55,7 @@ export const passwordSchema = z
  * Aceita números positivos
  */
 export const currencySchema = z
-  .number({
-    required_error: 'Valor é obrigatório',
-    invalid_type_error: 'Valor deve ser um número',
-  })
+  .number({ message: 'Valor deve ser um número' })
   .positive('Valor deve ser positivo')
   .finite('Valor deve ser finito');
 
