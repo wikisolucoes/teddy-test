@@ -1,8 +1,3 @@
-/**
- * useDashboard Hook - Hook customizado para gerenciar estado do dashboard
- * Seguindo padrões de React Hooks e gerenciamento de estado
- */
-
 import { useState, useEffect, useCallback } from 'react';
 import { dashboardService } from '../../application/services/dashboard.service';
 import type {
@@ -23,10 +18,6 @@ interface UseDashboardReturn extends UseDashboardState {
   refetch: () => Promise<void>;
 }
 
-/**
- * Hook para gerenciar dados e estado do dashboard
- * @returns Estado do dashboard e função de refetch
- */
 export function useDashboard(): UseDashboardReturn {
   const [state, setState] = useState<UseDashboardState>({
     stats: null,
@@ -36,9 +27,6 @@ export function useDashboard(): UseDashboardReturn {
     error: null,
   });
 
-  /**
-   * Busca todos os dados do dashboard
-   */
   const fetchDashboardData = useCallback(async () => {
     setState(prev => ({ ...prev, loading: true, error: null }));
 
@@ -65,9 +53,6 @@ export function useDashboard(): UseDashboardReturn {
     }
   }, []);
 
-  /**
-   * Carrega dados na montagem do componente
-   */
   useEffect(() => {
     fetchDashboardData();
   }, [fetchDashboardData]);

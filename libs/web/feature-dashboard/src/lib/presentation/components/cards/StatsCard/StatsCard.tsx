@@ -1,8 +1,3 @@
-/**
- * StatsCard Component - Card de estatística do dashboard
- * Componente reutilizável para exibir métricas com ícone e valor
- */
-
 import { Card, CardContent, cn } from '@teddy-monorepo/web/shared';
 import type { LucideIcon } from 'lucide-react';
 
@@ -22,9 +17,6 @@ const colorClasses = {
   orange: 'text-orange-500',
 };
 
-/**
- * Card de estatística com ícone e valor
- */
 export function StatsCard({
   title,
   value,

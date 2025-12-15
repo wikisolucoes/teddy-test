@@ -1,8 +1,3 @@
-/**
- * DashboardPage - Página principal do dashboard
- * Integra todos os componentes de estatísticas, tabela e gráfico
- */
-
 import { Alert, Button, Skeleton } from '@teddy-monorepo/web/shared';
 import { Users, UserCheck, UserX, UserPlus, RefreshCw } from 'lucide-react';
 import { useDashboard } from '../../hooks/useDashboard';
@@ -10,15 +5,10 @@ import { StatsCard } from '../../components/cards/StatsCard';
 import { LatestClientsTable } from '../../components/tables/LatestClientsTable';
 import { ClientsChart } from '../../components/charts/ClientsChart';
 
-/**
- * Página do Dashboard
- * Exibe estatísticas, últimos clientes e gráfico de evolução
- */
 export function DashboardPage() {
   const { stats, latestClients, chartData, loading, error, refetch } =
     useDashboard();
 
-  // Estado de erro
   if (error && !loading) {
     return (
       <div className="container mx-auto p-6">
@@ -36,7 +26,6 @@ export function DashboardPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      {/* Header */}
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
@@ -55,7 +44,6 @@ export function DashboardPage() {
         </Button>
       </div>
 
-      {/* Grid de Estatísticas */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {loading || !stats ? (
           <>
@@ -93,10 +81,8 @@ export function DashboardPage() {
         )}
       </div>
 
-      {/* Tabela de Últimos Clientes */}
       <LatestClientsTable clients={latestClients} loading={loading} />
 
-      {/* Gráfico de Evolução */}
       <ClientsChart data={chartData} loading={loading} />
     </div>
   );

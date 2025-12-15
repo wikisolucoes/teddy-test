@@ -1,8 +1,3 @@
-/**
- * ClientsChart Component - Gráfico de clientes por mês
- * Usa Recharts para criar gráfico de linha/área
- */
-
 import {
   Card,
   CardContent,
@@ -26,9 +21,6 @@ interface ClientsChartProps {
   loading?: boolean;
 }
 
-/**
- * Gráfico de evolução de clientes por mês
- */
 export function ClientsChart({ data, loading = false }: ClientsChartProps) {
   if (loading) {
     return (

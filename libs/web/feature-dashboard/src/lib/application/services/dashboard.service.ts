@@ -1,8 +1,3 @@
-/**
- * Dashboard Service - Camada de aplicação
- * Orquestra as operações do dashboard e pode aplicar regras de negócio
- */
-
 import { dashboardRepository } from '../../infrastructure/api/repositories/dashboard.repository';
 import type {
   DashboardStatsDto,
@@ -10,13 +5,7 @@ import type {
   ChartDataDto,
 } from '../dtos/dashboard.dto';
 
-/**
- * Serviço responsável por operações do dashboard
- */
 export class DashboardService {
-  /**
-   * Busca todas as estatísticas do dashboard
-   */
   async getStats(): Promise<DashboardStatsDto> {
     try {
       return await dashboardRepository.getStats();
@@ -26,9 +15,6 @@ export class DashboardService {
     }
   }
 
-  /**
-   * Busca os últimos clientes cadastrados
-   */
   async getLatestClients(limit = 5): Promise<LatestClientDto[]> {
     try {
       return await dashboardRepository.getLatestClients(limit);
@@ -38,9 +24,6 @@ export class DashboardService {
     }
   }
 
-  /**
-   * Busca dados do gráfico de clientes
-   */
   async getChartData(): Promise<ChartDataDto[]> {
     try {
       return await dashboardRepository.getChartData();
@@ -50,10 +33,6 @@ export class DashboardService {
     }
   }
 
-  /**
-   * Busca todos os dados do dashboard de uma vez
-   * Útil para carregar tudo de uma vez na montagem da página
-   */
   async getAllDashboardData() {
     try {
       const [stats, latestClients, chartData] = await Promise.all([
@@ -74,5 +53,4 @@ export class DashboardService {
   }
 }
 
-// Exporta uma instância singleton do serviço
 export const dashboardService = new DashboardService();

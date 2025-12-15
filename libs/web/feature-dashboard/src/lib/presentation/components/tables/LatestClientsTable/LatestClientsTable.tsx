@@ -1,8 +1,3 @@
-/**
- * LatestClientsTable Component - Tabela dos últimos clientes cadastrados
- * Exibe uma tabela compacta com os dados dos últimos clientes
- */
-
 import {
   Card,
   CardContent,
@@ -10,7 +5,7 @@ import {
   CardTitle,
   Skeleton,
 } from '@teddy-monorepo/web/shared';
-import { formatCurrency, formatDate } from '@teddy-monorepo/web/shared';
+import { maskCPF, maskPhone, formatDate } from '@teddy-monorepo/web/shared';
 import type { LatestClientDto } from '../../../application/dtos/dashboard.dto';
 
 interface LatestClientsTableProps {
@@ -18,9 +13,6 @@ interface LatestClientsTableProps {
   loading?: boolean;
 }
 
-/**
- * Tabela dos últimos clientes cadastrados
- */
 export function LatestClientsTable({
   clients,
   loading = false,
@@ -68,8 +60,9 @@ export function LatestClientsTable({
             <thead>
               <tr className="border-b text-left">
                 <th className="pb-3 font-semibold text-sm">Nome</th>
-                <th className="pb-3 font-semibold text-sm">Salário</th>
-                <th className="pb-3 font-semibold text-sm">Empresa</th>
+                <th className="pb-3 font-semibold text-sm">Email</th>
+                <th className="pb-3 font-semibold text-sm">CPF</th>
+                <th className="pb-3 font-semibold text-sm">Telefone</th>
                 <th className="pb-3 font-semibold text-sm">Cadastro</th>
               </tr>
             </thead>
@@ -78,10 +71,13 @@ export function LatestClientsTable({
                 <tr key={client.id} className="border-b last:border-0">
                   <td className="py-3 font-medium">{client.name}</td>
                   <td className="py-3 text-sm text-muted-foreground">
-                    {formatCurrency(client.salary)}
+                    {client.email}
                   </td>
                   <td className="py-3 text-sm text-muted-foreground">
-                    {formatCurrency(client.companyValuation)}
+                    {maskCPF(client.cpf)}
+                  </td>
+                  <td className="py-3 text-sm text-muted-foreground">
+                    {maskPhone(client.phone)}
                   </td>
                   <td className="py-3 text-sm text-muted-foreground">
                     {formatDate(client.createdAt)}
