@@ -1,0 +1,30 @@
+# ===================================
+# Docker Compose - Teddy Web
+# ===================================
+# Ambiente de desenvolvimento local
+# ===================================
+
+services:
+  # Web Application
+  web:
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+    container_name: web-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "4200:80"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - web-network
+
+networks:
+  web-network:
+    driver: bridge

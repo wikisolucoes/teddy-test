@@ -32,9 +32,26 @@ COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 # Copy nginx config for SPA routing
 RUN echo 'server { \
     listen 80; \
+    server_name _; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    \
+    # Enable gzip compression \
+    gzip on; \
+    gzip_vary on; \
+    gzip_min_length 1024; \
+    gzip_types text/css application/javascript application/json image/svg+xml; \
+    \
+    # Serve static assets with cache \
+    location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|eot)$ { \
+        expires 1y; \
+        add_header Cache-Control "public, immutable"; \
+    } \
+    \
+    # SPA routing - serve index.html for all routes \
     location / { \
-        root /usr/share/nginx/html; \
         try_files $uri $uri/ /index.html; \
+        add_header Cache-Control "no-cache"; \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
