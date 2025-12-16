@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { DataSource } from 'typeorm';
 import {
   HealthCheck,
   HealthCheckService,
@@ -18,7 +19,11 @@ export class HealthController {
     private readonly db: TypeOrmHealthIndicator,
     private readonly memory: MemoryHealthIndicator,
     private readonly disk: DiskHealthIndicator,
-    private readonly healthConfig: HealthConfig
+    private readonly healthConfig: HealthConfig,
+    @Inject('WRITE_DATA_SOURCE')
+    private readonly writeConnection: DataSource,
+    @Inject('READ_DATA_SOURCE')
+    private readonly readConnection: DataSource
   ) {}
 
   @Get()
@@ -81,8 +86,8 @@ export class HealthController {
   async check(): Promise<HealthCheckResult> {
     return this.health.check([
       // Database health checks
-      async () => this.db.pingCheck('database-write', { connection: 'write' }),
-      async () => this.db.pingCheck('database-read', { connection: 'read' }),
+      async () => this.db.pingCheck('database-write', { connection: this.writeConnection }),
+      async () => this.db.pingCheck('database-read', { connection: this.readConnection }),
       
       // Memory health checks
       async () => this.memory.checkHeap('memory-heap', this.healthConfig.memoryThresholdBytes),
