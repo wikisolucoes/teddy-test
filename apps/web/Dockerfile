@@ -29,9 +29,9 @@ FROM nginx:alpine
 # Copy built app
 COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
-# Copy nginx config for SPA routing
+# Create nginx config template that uses PORT env variable
 RUN echo 'server { \
-    listen 80; \
+    listen ${PORT:-80}; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -41,6 +41,24 @@ RUN echo 'server { \
     gzip_vary on; \
     gzip_min_length 1024; \
     gzip_types text/css application/javascript application/json image/svg+xml; \
+    \
+    # MIME types \
+    types { \
+        text/html html; \
+        text/css css; \
+        text/javascript js; \
+        application/javascript js; \
+        application/json json; \
+        image/svg+xml svg; \
+        image/png png; \
+        image/jpeg jpg jpeg; \
+        image/gif gif; \
+        image/x-icon ico; \
+        font/woff woff; \
+        font/woff2 woff2; \
+        font/ttf ttf; \
+        font/eot eot; \
+    } \
     \
     # Serve static assets with cache \
     location ~* \.(?:css|js|jpg|jpeg|gif|png|ico|svg|woff|woff2|ttf|eot)$ { \
@@ -53,8 +71,14 @@ RUN echo 'server { \
         try_files $uri $uri/ /index.html; \
         add_header Cache-Control "no-cache"; \
     } \
-}' > /etc/nginx/conf.d/default.conf
+}' > /etc/nginx/conf.d/default.conf.template
 
-EXPOSE 80
+# Create entrypoint script to substitute PORT env variable
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'envsubst '\''$PORT'\'' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
+    echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
 
-CMD ["nginx", "-g", "daemon off;"]
+EXPOSE ${PORT:-80}
+
+CMD ["/docker-entrypoint.sh"]
