@@ -1,5 +1,9 @@
+
 # Build stage
 FROM node:20-alpine AS builder
+
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 
 WORKDIR /app
 
@@ -21,7 +25,7 @@ RUN pnpm install --frozen-lockfile
 RUN pnpm nx sync
 
 # Build the application
-RUN pnpm nx build @teddy-monorepo/web --configuration=production
+RUN VITE_API_URL=$VITE_API_URL pnpm nx build @teddy-monorepo/web --configuration=production
 
 # Production stage
 FROM nginx:alpine
