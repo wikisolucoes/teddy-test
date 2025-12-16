@@ -49,6 +49,14 @@ describe('HealthController', () => {
             diskThresholdPercent: 0.9,
           },
         },
+        {
+          provide: 'WRITE_DATA_SOURCE',
+          useValue: {},
+        },
+        {
+          provide: 'READ_DATA_SOURCE',
+          useValue: {},
+        },
       ],
     }).compile();
 
