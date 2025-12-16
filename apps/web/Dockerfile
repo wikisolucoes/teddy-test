@@ -31,7 +31,7 @@ COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
 
 # Create nginx config template that uses PORT env variable
 RUN echo 'server { \
-    listen ${PORT:-80}; \
+    listen $PORT; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -75,10 +75,11 @@ RUN echo 'server { \
 
 # Create entrypoint script to substitute PORT env variable
 RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'export PORT=${PORT:-80}' >> /docker-entrypoint.sh && \
     echo 'envsubst '\''$PORT'\'' < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf' >> /docker-entrypoint.sh && \
     echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
     chmod +x /docker-entrypoint.sh
 
-EXPOSE ${PORT:-80}
+EXPOSE 80
 
 CMD ["/docker-entrypoint.sh"]
