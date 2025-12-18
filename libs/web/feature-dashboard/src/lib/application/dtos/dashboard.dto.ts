@@ -1,3 +1,11 @@
+export interface LatestClientsApiResponse {
+  clients: LatestClientDto[];
+}
+
+export interface ChartDataApiResponse {
+  labels: string[];
+  data: number[];
+}
 export interface DashboardStatsDto {
   total: number;
   active: number;
