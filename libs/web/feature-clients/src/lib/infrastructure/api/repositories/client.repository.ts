@@ -18,7 +18,7 @@ export class ClientRepository implements IClientRepository {
   async findAll(
     page: number,
     limit: number
-  ): Promise<PaginatedResponse<ClientEntity>> {
+    ): Promise<PaginatedResponse<ClientEntity>> { 
     const response = await apiClient.get<PaginatedClientsDto>(
       API_ENDPOINTS.CLIENTS.BASE,
       { params: { page, limit } }

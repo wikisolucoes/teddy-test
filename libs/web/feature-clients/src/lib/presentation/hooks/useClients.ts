@@ -44,9 +44,9 @@ export function useClients(initialLimit = 16): UseClientsReturn {
 
       setState(prev => ({
         ...prev,
-        clients: response.data,
-        totalPages: response.meta.totalPages,
-        total: response.meta.total,
+        clients: response.items,
+        totalPages: response.totalPages,
+        total: response.total,
         loading: false,
       }));
     } catch (error) {

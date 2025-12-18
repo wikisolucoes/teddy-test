@@ -6,14 +6,7 @@
  * Resposta paginada da API
  */
 export interface PaginatedResponse<T> {
-  data: T[];
-  meta: PaginationMeta;
-}
-
-/**
- * Metadados de paginação
- */
-export interface PaginationMeta {
+  items: T[];
   total: number;
   page: number;
   limit: number;
