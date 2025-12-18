@@ -13,6 +13,9 @@ export * from './lib/components/ui/toast';
 export * from './lib/components/ui/toaster';
 export * from './lib/components/ui/pagination';
 
+// Layout Components
+export * from './lib/components/layout/Header';
+
 // Utils
 export * from './lib/utils';
 export * from './lib/utils/formatters';

@@ -14,7 +14,6 @@ export * from './lib/presentation/hooks/useClients';
 export * from './lib/presentation/hooks/useSelectedClients';
 
 // Presentation - Components
-export * from './lib/presentation/components/layout/Header';
 export * from './lib/presentation/components/cards/ClientCard';
 export * from './lib/presentation/components/forms/ClientForm';
 export * from './lib/presentation/components/modals/ClientFormDialog';

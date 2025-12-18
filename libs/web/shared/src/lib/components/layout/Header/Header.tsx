@@ -1,19 +1,24 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@teddy-monorepo/web/shared';
-import { ROUTES } from '@teddy-monorepo/web/shared';
-import { useAuth } from '@teddy-monorepo/web/feature-auth';
+import { Button } from '../../ui/button';
+import { ROUTES } from '../../../constants/routes.constants';
+
+
 
 interface HeaderProps {
   userName?: string;
+  onLogout?: () => void;
 }
 
-export function Header({ userName = 'Usuário' }: HeaderProps) {
+
+export function Header({ userName = 'Usuário', onLogout }: HeaderProps) {
   const navigate = useNavigate();
-  const { logout } = useAuth();
 
   const handleLogout = () => {
-    logout();
-    navigate(ROUTES.LOGIN);
+    if (typeof onLogout === 'function') {
+      onLogout();
+    } else {
+      navigate(ROUTES.LOGIN);
+    }
   };
 
   return (

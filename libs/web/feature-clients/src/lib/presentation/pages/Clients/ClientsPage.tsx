@@ -17,7 +17,8 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@teddy-monorepo/web/shared';
-import { Header } from '../../components/layout/Header';
+import { Header } from '@teddy-monorepo/web/shared';
+import { useAuth } from '@teddy-monorepo/web/feature-auth';
 import { ClientCard } from '../../components/cards/ClientCard';
 import { ClientFormDialog } from '../../components/modals/ClientFormDialog';
 import { ConfirmDeleteDialog } from '../../components/modals/ConfirmDeleteDialog';
@@ -30,6 +31,7 @@ import type {
 } from '../../../application/dtos/client.dto';
 
 export function ClientsPage() {
+  const { user, logout } = useAuth();
   const { toast } = useToast();
   const {
     clients,
@@ -153,7 +155,7 @@ export function ClientsPage() {
   if (error && !loading) {
     return (
       <div className="min-h-screen bg-muted/30">
-        <Header />
+        <Header userName={user?.name} onLogout={logout} />
         <div className="container mx-auto px-4 py-6">
           <Alert variant="destructive">
             <p className="font-semibold">Erro ao carregar clientes</p>
@@ -169,7 +171,7 @@ export function ClientsPage() {
 
   return (
     <div className="min-h-screen bg-muted/30">
-      <Header />
+      <Header userName={user?.name} onLogout={logout} />
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex justify-between items-center mb-6">
