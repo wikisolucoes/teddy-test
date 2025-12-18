@@ -31,6 +31,12 @@ export function Header({ userName = 'Usuário', onLogout }: HeaderProps) {
 
           <nav className="flex gap-6 items-center">
             <Link
+              to={ROUTES.DASHBOARD || '/dashboard'}
+              className="text-sm font-medium hover:text-orange-500 transition-colors data-[active=true]:text-orange-500 data-[active=true]:underline"
+            >
+              Dashboard
+            </Link>
+            <Link
               to={ROUTES.CLIENTS}
               className="text-sm font-medium hover:text-orange-500 transition-colors data-[active=true]:text-orange-500 data-[active=true]:underline"
             >
